@@ -1,0 +1,12 @@
+.DS_Store
+node_modules/
+coverage/
+docs/
+platform/
+public/
+.tmp
+.idea
+.log
+dist/
+.env
+npm-debug.log

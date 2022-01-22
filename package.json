@@ -1,0 +1,15 @@
+{
+  "name": "schedule",
+  "version": "0.1.0",
+  "description": "Compute the project schedule duration from spreadsheet input",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mihi Health <monte@mihi.health>",
+  "license": "ISC",
+  "dependencies": {
+    "lodash.merge": "^4.6.2",
+    "xlsx": "^0.17.5"
+  }
+}

@@ -1,0 +1,202 @@
+const xlsx = require('xlsx')
+
+var data = {
+    "Design": {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Design Review': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    "Coding": {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Code Review': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Unit Test': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Document': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Final Review Prep': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Final Review': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    },
+    'Merge To Develop': {
+        "name": "",
+        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
+        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
+    }
+}
+
+// read a spreadsheet and transform into objects
+function readDefaultStdSch(fileName, tab) {
+    console.error('readMasterFileOutline() fileName:', fileName, 'tab:', tab)
+    const spreadsheet = xlsx.readFile(
+        fileName,
+        { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
+    )
+
+    const sheets = spreadsheet.SheetNames
+    // console.error('sheet names:', sheets)
+    const sheetName = sheets[0]
+    // const sheetData = spreadsheet.Sheets[sheetName]
+    const sheetData = spreadsheet.Sheets[tab]
+    // console.error('sheetName:sheetData: %s', sheetName, JSON.stringify(sheetData))
+
+    // figure out active cell bounding box
+    const upperLeft = sheetData['!ref'].split(':')[0]
+    const upperLeftCol = sheetData['!ref'].split(':')[0].match(/[a-zA-Z]+/g)[0]
+    const upperLeftRow = sheetData['!ref'].split(':')[0].match(/[0-9]+/g)[0]
+    // debugger;
+    const lowerRight = sheetData['!ref'].split(':')[1]
+    const lowerRightCol = sheetData['!ref'].split(':')[1].match(/[a-zA-Z]+/g)[0]
+    const lowerRightRow = sheetData['!ref'].split(':')[1].match(/[0-9]+/g)[0]
+    console.log('MasterFile Info: [%s:%s] cell range %s to %s\n', fileName, tab, upperLeft, lowerRight)
+
+    // compute # rows and cols
+    const stringIndex = {
+        'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8, 'I': 9,
+        'J': 10, 'K': 11, 'L': 12, 'M': 13, 'N': 14, 'O': 15, 'P': 16, 'Q': 17, 'R': 18, 'S': 19,
+        'T': 20, 'U': 21, 'V': 22, 'W': 23, 'X': 24, 'Y': 25, 'Z': 26
+    }
+    const numCols = stringIndex[lowerRightCol] - stringIndex[upperLeftCol] + 1
+    const numRows = lowerRightRow - upperLeftRow + 1
+    console.log('# cols', numCols)
+    console.log('# rows', numRows)
+
+    milestoneIndex = {
+        'Design': {'start': 1, 'easy':5, 'medium':6, 'hard':7},
+        'Design Review': { 'start': 9, 'easy': 13, 'medium': 14, 'hard': 15 },
+        'Coding': { 'start': 17, 'easy': 21, 'medium': 22, 'hard': 23 },
+        'Code Review': { 'start': 25, 'easy': 29, 'medium': 30, 'hard': 31 },
+        'Unit Test': { 'start': 33, 'easy': 37, 'medium': 38, 'hard': 39 },
+        'Document': { 'start': 41, 'easy': 45, 'medium': 46, 'hard': 47 },
+        'Final Review Prep': { 'start': 49, 'easy': 53, 'medium': 54, 'hard': 55 },
+        'Final Review': { 'start': 57, 'easy': 61, 'medium': 62, 'hard': 63 },
+        'Merge To Develop': { 'start': 65, 'easy': 69, 'medium': 70, 'hard': 71 }
+    }
+
+    const keyCols = ['A', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+    var headers = {}
+
+    // import the spreadsheet into objects
+    for (colRow in sheetData) {
+
+        // strip out the worksheet specific options (autofilter, margins, merges, etc.)
+        if (colRow[0] === '!') continue
+
+        // parse out column & row from ColRow and then value
+        var tt = 0
+        for (var i = 0; i < colRow.length; i++) {
+            if (!isNaN(colRow[i])) {
+                tt = i
+                break
+            }
+        }
+        var col = colRow.substring(0, tt);
+        var row = parseInt(colRow.substring(tt))
+        var value = sheetData[colRow].v
+
+        // only store out interesting columns
+        if (keyCols.includes(col)) {
+            convertMatrix('Design', row, col, value)
+            convertMatrix('Design Review', row, col, value)
+            convertMatrix('Coding', row, col, value)
+            convertMatrix('Code Review', row, col, value)
+            convertMatrix('Unit Test', row, col, value)
+            convertMatrix('Document', row, col, value)
+            convertMatrix('Final Review Prep', row, col, value)
+            convertMatrix('Final Review', row, col, value)
+            convertMatrix('Merge To Develop', row, col, value)
+        }
+    }
+
+    // console.info('data:', data)
+    return data
+}
+
+function convertMatrix(milestone, row, col, value) {
+    // console.info('milestone:', milestone, 'row:', row, 'col:', col, 'value:', value)
+    // console.info('typeof milestoneIndex[milestone]:', typeof milestoneIndex[milestone])
+    if (typeof milestoneIndex[milestone] === 'undefined') {
+        if (col === 'A')
+            console.error('\tWarning: milestone:', milestone, 'is not located in milestoneIndex array')
+        return
+    }
+    if (row >= milestoneIndex[milestone].start && row <= milestoneIndex[milestone].hard) {
+        if (row === milestoneIndex[milestone].start && col === 'A') {
+            // console.info('milestone:', milestone, ', row:', row, 
+            //             // 'milestoneIndex[milestone].start', milestoneIndex[milestone].start, 
+            //             ', col:', col, ', value:', value, 
+            // //             // data,
+            // //             // data.coding, 
+            // //             data[milestone]
+            // )
+            data[milestone].name = value
+        } else if (row === milestoneIndex[milestone].easy) {
+            if (col === 'D') data[milestone].easy.sdi.min = value
+            if (col === 'E') data[milestone].easy.sdi.expected = value
+            if (col === 'F') data[milestone].easy.sdi.max = value
+            if (col === 'G') data[milestone].easy.sdii.min = value
+            if (col === 'H') data[milestone].easy.sdii.expected = value
+            if (col === 'I') data[milestone].easy.sdii.max = value
+            if (col === 'J') data[milestone].easy.sdiii.min = value
+            if (col === 'K') data[milestone].easy.sdiii.expected = value
+            if (col === 'L') data[milestone].easy.sdiii.max = value
+            // console.info('data[milestone].easy test:', data[milestone].easy)
+        } else if (row === milestoneIndex[milestone].medium) {
+            if (col === 'D') data[milestone].medium.sdi.min = value
+            if (col === 'E') data[milestone].medium.sdi.expected = value
+            if (col === 'F') data[milestone].medium.sdi.max = value
+            if (col === 'G') data[milestone].medium.sdii.min = value
+            if (col === 'H') data[milestone].medium.sdii.expected = value
+            if (col === 'I') data[milestone].medium.sdii.max = value
+            if (col === 'J') data[milestone].medium.sdiii.min = value
+            if (col === 'K') data[milestone].medium.sdiii.expected = value
+            if (col === 'L') data[milestone].medium.sdiii.max = value
+            // console.info('data[milestone].medium test:', data[milestone].medium)
+        } else if (row === milestoneIndex[milestone].hard) {
+            if (col === 'D') data[milestone].hard.sdi.min = value
+            if (col === 'E') data[milestone].hard.sdi.expected = value
+            if (col === 'F') data[milestone].hard.sdi.max = value
+            if (col === 'G') data[milestone].hard.sdii.min = value
+            if (col === 'H') data[milestone].hard.sdii.expected = value
+            if (col === 'I') data[milestone].hard.sdii.max = value
+            if (col === 'J') data[milestone].hard.sdiii.min = value
+            if (col === 'K') data[milestone].hard.sdiii.expected = value
+            if (col === 'L') data[milestone].hard.sdiii.max = value
+            // console.info('data[milestone].hard test:', data[milestone].hard)
+        }
+    }
+}
+
+module.exports.readDefaultStdSch = readDefaultStdSch
