@@ -1,6 +1,6 @@
 const xlsx = require('xlsx')
 
-var data = {
+let data = {
     "Design": {
         "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
@@ -80,7 +80,7 @@ function readDefaultStdSch(fileName, tab) {
     const lowerRight = sheetData['!ref'].split(':')[1]
     const lowerRightCol = sheetData['!ref'].split(':')[1].match(/[a-zA-Z]+/g)[0]
     const lowerRightRow = sheetData['!ref'].split(':')[1].match(/[0-9]+/g)[0]
-    console.log('MasterFile Info: [%s:%s] cell range %s to %s\n', fileName, tab, upperLeft, lowerRight)
+    // console.log('MasterFile Info: [%s:%s] cell range %s to %s\n', fileName, tab, upperLeft, lowerRight)
 
     // compute # rows and cols
     const stringIndex = {
@@ -90,8 +90,8 @@ function readDefaultStdSch(fileName, tab) {
     }
     const numCols = stringIndex[lowerRightCol] - stringIndex[upperLeftCol] + 1
     const numRows = lowerRightRow - upperLeftRow + 1
-    console.log('# cols', numCols)
-    console.log('# rows', numRows)
+    // console.log('# cols', numCols)
+    // console.log('# rows', numRows)
 
     milestoneIndex = {
         'Design': {'start': 1, 'easy':5, 'medium':6, 'hard':7},
@@ -106,7 +106,7 @@ function readDefaultStdSch(fileName, tab) {
     }
 
     const keyCols = ['A', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
-    var headers = {}
+    let headers = {}
 
     // import the spreadsheet into objects
     for (colRow in sheetData) {
@@ -115,16 +115,16 @@ function readDefaultStdSch(fileName, tab) {
         if (colRow[0] === '!') continue
 
         // parse out column & row from ColRow and then value
-        var tt = 0
-        for (var i = 0; i < colRow.length; i++) {
+        let tt = 0
+        for (let i = 0; i < colRow.length; i++) {
             if (!isNaN(colRow[i])) {
                 tt = i
                 break
             }
         }
-        var col = colRow.substring(0, tt);
-        var row = parseInt(colRow.substring(tt))
-        var value = sheetData[colRow].v
+        let col = colRow.substring(0, tt);
+        let row = parseInt(colRow.substring(tt))
+        let value = sheetData[colRow].v
 
         // only store out interesting columns
         if (keyCols.includes(col)) {

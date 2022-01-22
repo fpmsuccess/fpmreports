@@ -11,7 +11,7 @@ tdList = []
 // transform schedule index  objects into a hierarchy
 function parseScheduleIndex(scheduleIndex) {
 
-    var currentId = -1
+    let currentId = -1
 
     // first build the property and id list
     scheduleIndex.forEach((line, index) => {

@@ -1,6 +1,6 @@
 const xlsx = require('xlsx')
 
-var data = {
+let data = {
     "Design": {
         "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
@@ -110,7 +110,7 @@ function readEstTDSchedule(fileName, tab) {
     }
 
     const keyCols = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
-    var headers = {}
+    let headers = {}
 
     // import the spreadsheet into objects
     for (colRow in sheetData) {
@@ -119,16 +119,16 @@ function readEstTDSchedule(fileName, tab) {
         if (colRow[0] === '!') continue
 
         // parse out column & row from ColRow and then value
-        var tt = 0
-        for (var i = 0; i < colRow.length; i++) {
+        let tt = 0
+        for (let i = 0; i < colRow.length; i++) {
             if (!isNaN(colRow[i])) {
                 tt = i
                 break
             }
         }
-        var col = colRow.substring(0, tt);
-        var row = parseInt(colRow.substring(tt))
-        var value = sheetData[colRow].v
+        let col = colRow.substring(0, tt);
+        let row = parseInt(colRow.substring(tt))
+        let value = sheetData[colRow].v
 
         // start with the TD specific info
         if (row === 1 && col == 'B')
