@@ -59,7 +59,7 @@ let data = {
 
 // read a spreadsheet and transform into objects
 function readEstTDSchedule(fileName, tab) {
-    // console.error('readMasterFileOutline() fileName:', fileName, 'tab:', tab)
+    // console.error('readEstTDSchedule() fileName:', fileName, 'tab:', tab)
     const spreadsheet = xlsx.readFile(
         fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
@@ -93,9 +93,11 @@ function readEstTDSchedule(fileName, tab) {
     // console.log('# cols', numCols)
     // console.log('# rows', numRows)
 
-    cols = {'sdiMin': 'C', 'sdiExpected': 'D', 'sdiMax': 'E',
-            'sdiiMin': 'F', 'sdiiExpected': 'G', 'sdiiMax': 'H',
-            'sdiiiMin': 'I', 'sdiiExpected': 'J', 'sdiiiMax': 'I' }
+    cols = {
+        'sdiMin': 'C', 'sdiExpected': 'D', 'sdiMax': 'E',
+        'sdiiMin': 'F', 'sdiiExpected': 'G', 'sdiiMax': 'H',
+        'sdiiiMin': 'I', 'sdiiiExpected': 'J', 'sdiiiMax': 'K'
+    }
 
     milestoneIndex = {
         'Design': { 'start': 9, 'easy': 12, 'medium': 13, 'hard': 14 },
@@ -131,16 +133,59 @@ function readEstTDSchedule(fileName, tab) {
         let value = sheetData[colRow].v
 
         // start with the TD specific info
-        if (row === 1 && col == 'B')
-            data['Deliverable Name'] = value
-        if (row === 2 && col == 'B')
-            data['Deliverable Number'] = value
-        if (row === 4 && col == 'B')
-            data['Difficulty Level'] = value
-        if (row === 5 && col == 'B')
-            data['Recommended Skill Level'] = value
-        if (row === 6 && col == 'B')
-            data['Person creating Estimate'] = value
+        {
+            let error = false
+            if (row === 1 && col == 'B') {
+                // console.info('checking row 1, col B value:', row, col, value)
+                if (value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has missing \'Deliverable Name\' entry')
+                    error = true
+                } else {
+                    // console.info('\tInfo: Saving Deliverable Name:', value)
+                    data['Deliverable Name - TD Estimate Form'] = value
+                }
+            }
+            if (row === 2 && col == 'B') {
+                // console.info('checking row 2, col B value:', row, col, value)
+                if (value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has missing \'Deliverable Number\' entry')
+                    error = true
+                } else {
+                    // console.info('\tInfo: Saving Deliverable Number:', value)
+                    data['Deliverable Number'] = value
+                }
+            }
+            if (row === 4 && col == 'B') {
+                if (value === 'Level of Difficulty (Example)' || value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has invalid \'Deliverable Difficulty Level\' selection')
+                    error = true
+                } else {
+                    data['Difficulty Level'] = value
+                }
+            }
+            if (row === 5 && col == 'B') {
+                if (value === 'Skill Level (Example)' || value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has invalid \'Skill Level\' selection')
+                    error = true
+                } else {
+                    data['Recommended Skill Level'] = value
+                }
+            }
+            if (row === 6 && col == 'B') {
+                if (value === 'first last' || value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has invalid \'Person creating Estimate\' selection')
+                    error = true
+                } else {
+                    data['Person Creating Estimate'] = value
+                }
+            }
+
+            // if a parsing error has been detected return with a null
+            if (error === true) {
+                console.info('\tWarning: parsing error on TDxxx Form')
+                return null
+            }
+        }
 
         // only process interesting columns
         if (keyCols.includes(col)) {

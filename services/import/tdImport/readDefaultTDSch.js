@@ -59,7 +59,7 @@ let data = {
 
 // read a spreadsheet and transform into objects
 function readDefaultStdSch(fileName, tab) {
-    console.error('readMasterFileOutline() fileName:', fileName, 'tab:', tab)
+    // console.error('readDefaultStdSch() fileName:', fileName, 'tab:', tab)
     const spreadsheet = xlsx.readFile(
         fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
@@ -93,6 +93,12 @@ function readDefaultStdSch(fileName, tab) {
     // console.log('# cols', numCols)
     // console.log('# rows', numRows)
 
+    cols = {
+        'sdiMin': 'C', 'sdiExpected': 'D', 'sdiMax': 'E',
+        'sdiiMin': 'F', 'sdiiExpected': 'G', 'sdiiMax': 'H',
+        'sdiiiMin': 'I', 'sdiiiExpected': 'J', 'sdiiiMax': 'K'
+    }
+
     milestoneIndex = {
         'Design': {'start': 1, 'easy':5, 'medium':6, 'hard':7},
         'Design Review': { 'start': 9, 'easy': 13, 'medium': 14, 'hard': 15 },
@@ -105,7 +111,7 @@ function readDefaultStdSch(fileName, tab) {
         'Merge To Develop': { 'start': 65, 'easy': 69, 'medium': 70, 'hard': 71 }
     }
 
-    const keyCols = ['A', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+    const keyCols = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
     let headers = {}
 
     // import the spreadsheet into objects
@@ -163,37 +169,37 @@ function convertMatrix(milestone, row, col, value) {
             // )
             data[milestone].name = value
         } else if (row === milestoneIndex[milestone].easy) {
-            if (col === 'D') data[milestone].easy.sdi.min = value
-            if (col === 'E') data[milestone].easy.sdi.expected = value
-            if (col === 'F') data[milestone].easy.sdi.max = value
-            if (col === 'G') data[milestone].easy.sdii.min = value
-            if (col === 'H') data[milestone].easy.sdii.expected = value
-            if (col === 'I') data[milestone].easy.sdii.max = value
-            if (col === 'J') data[milestone].easy.sdiii.min = value
-            if (col === 'K') data[milestone].easy.sdiii.expected = value
-            if (col === 'L') data[milestone].easy.sdiii.max = value
+            if (col === cols.sdiMin) data[milestone].easy.sdi.min = value
+            if (col === cols.sdiExpected) data[milestone].easy.sdi.expected = value
+            if (col === cols.sdiMax) data[milestone].easy.sdi.max = value
+            if (col === cols.sdiiMin) data[milestone].easy.sdii.min = value
+            if (col === cols.sdiiExpected) data[milestone].easy.sdii.expected = value
+            if (col === cols.sdiiMax) data[milestone].easy.sdii.max = value
+            if (col === cols.sdiiiMin) data[milestone].easy.sdiii.min = value
+            if (col === cols.sdiiiExpected) data[milestone].easy.sdiii.expected = value
+            if (col === cols.sdiiiMax) data[milestone].easy.sdiii.max = value
             // console.info('data[milestone].easy test:', data[milestone].easy)
         } else if (row === milestoneIndex[milestone].medium) {
-            if (col === 'D') data[milestone].medium.sdi.min = value
-            if (col === 'E') data[milestone].medium.sdi.expected = value
-            if (col === 'F') data[milestone].medium.sdi.max = value
-            if (col === 'G') data[milestone].medium.sdii.min = value
-            if (col === 'H') data[milestone].medium.sdii.expected = value
-            if (col === 'I') data[milestone].medium.sdii.max = value
-            if (col === 'J') data[milestone].medium.sdiii.min = value
-            if (col === 'K') data[milestone].medium.sdiii.expected = value
-            if (col === 'L') data[milestone].medium.sdiii.max = value
+            if (col === cols.sdiMin) data[milestone].medium.sdi.min = value
+            if (col === cols.sdiExpected) data[milestone].medium.sdi.expected = value
+            if (col === cols.sdiMax) data[milestone].medium.sdi.max = value
+            if (col === cols.sdiiMin) data[milestone].medium.sdii.min = value
+            if (col === cols.sdiiExpected) data[milestone].medium.sdii.expected = value
+            if (col === cols.sdiiMax) data[milestone].medium.sdii.max = value
+            if (col === cols.sdiiiMin) data[milestone].medium.sdiii.min = value
+            if (col === cols.sdiiiExpected) data[milestone].medium.sdiii.expected = value
+            if (col === cols.sdiiiMax) data[milestone].medium.sdiii.max = value
             // console.info('data[milestone].medium test:', data[milestone].medium)
         } else if (row === milestoneIndex[milestone].hard) {
-            if (col === 'D') data[milestone].hard.sdi.min = value
-            if (col === 'E') data[milestone].hard.sdi.expected = value
-            if (col === 'F') data[milestone].hard.sdi.max = value
-            if (col === 'G') data[milestone].hard.sdii.min = value
-            if (col === 'H') data[milestone].hard.sdii.expected = value
-            if (col === 'I') data[milestone].hard.sdii.max = value
-            if (col === 'J') data[milestone].hard.sdiii.min = value
-            if (col === 'K') data[milestone].hard.sdiii.expected = value
-            if (col === 'L') data[milestone].hard.sdiii.max = value
+            if (col === cols.sdiMin) data[milestone].hard.sdi.min = value
+            if (col === cols.sdiExpected) data[milestone].hard.sdi.expected = value
+            if (col === cols.sdiMax) data[milestone].hard.sdi.max = value
+            if (col === cols.sdiiMin) data[milestone].hard.sdii.min = value
+            if (col === cols.sdiiExpected) data[milestone].hard.sdii.expected = value
+            if (col === cols.sdiiMax) data[milestone].hard.sdii.max = value
+            if (col === cols.sdiiiMin) data[milestone].hard.sdiii.min = value
+            if (col === cols.sdiiiExpected) data[milestone].hard.sdiii.expected = value
+            if (col === cols.sdiiiMax) data[milestone].hard.sdiii.max = value
             // console.info('data[milestone].hard test:', data[milestone].hard)
         }
     }
