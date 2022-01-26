@@ -38,6 +38,7 @@ Win10 examples:
   - `node app.js --fileRoot ..\StdCosting\`
   - `node app.js --fileRoot ..\StdCosting\ --show deliverables`
   - `node app.js --fileRoot ..\StdCosting\ --show deliverables --showLimit id`
+  - `node app.js --fileRoot ..\StdCosting\ --show deliverables --showLimit id --show onlyActiveTDs --show onlyActiveIDs`
 
 
 Linux examples:

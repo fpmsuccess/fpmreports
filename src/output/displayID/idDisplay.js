@@ -1,6 +1,11 @@
 const { tdDisplay } = require('../displayTD/tdDisplay')
 
 function idDisplay(args, id) {
+    // console.info('args.showOnlyActiveIDs:', args.showOnlyActiveIDs)
+    // console.info('id.Active:', id.Active)
+    if (args.showOnlyActiveIDs && !id.Active)
+        return
+
     console.log(id['Full Deliverable Name'])
     console.group() // for TDs
     // console.log(id['ID Schedule Total')

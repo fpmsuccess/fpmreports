@@ -25,7 +25,7 @@ function cliArgs() {
 
     // source directory, file, and tab default options
     if (typeof args.fileRoot === 'undefined') {
-        args.fileRoot = './'
+        args.fileRoot = '../../StdCosting/'
     }
     if (typeof args.indexSource === 'undefined') {
         args.indexSource = 'elbert - std costing.xlsx'
@@ -53,17 +53,17 @@ function cliArgs() {
         args.indexSource = args.indexSource.replace(/\//g, '\\')
     }
 
-    // display output options
-    if (typeof args.hsd !== 'undefined' && args.hsd) {
-        console.log('show deliverables list details')
-        console.log('show Schedule Index')
-        console.log('show individual TD')
-        console.log('show individual ID')
-        console.log('show TD Schedule info')
-        console.log('show ID Schedule info')
-        console.log('show PD Schedule info')
-        process.exit(0)
-    }
+    // // display output options
+    // if (typeof args.hsd !== 'undefined' && args.hsd) {
+    //     console.log('show deliverables list details')
+    //     console.log('show Schedule Index')
+    //     console.log('show individual TD')
+    //     console.log('show individual ID')
+    //     console.log('show TD Schedule info')
+    //     console.log('show ID Schedule info')
+    //     console.log('show PD Schedule info')
+    //     process.exit(0)
+    // }
 
     // default show options to false
     args.showScheduleIndex = false
@@ -72,64 +72,58 @@ function cliArgs() {
     args.showDefaultTDSchedule = false
     args.showTDEstimateSchedule = false
     args.showNoWarnings = false
+    args.showOnlyActiveTDs = false
+    args.showOnlyActiveIDs = false
+    args.showOnlyActiveMilestones = false
     typeof args.showLevel === 'undefined' ? args.showLevel = 'td' : ''
     typeof args.manHrsPerWk === 'undefined' ? args.manHrsPerWk = 36 : ''
 
     // handle any command line show options
-    if (typeof args.show !== 'undefined') {
-        // console.info('\t typeof args.show:', typeof args.show, args.show)
-        if (typeof args.show === 'object') {
-            args.show.forEach((option) => {
-                console.info('\t each show option', option)
-                switch (option) {
-                    case 'sIndex':
-                    case 'sindex':
-                        args.showScheduleIndex = true
-                        break
-                    case 'deliverable':
-                    case 'deliverables':
-                    case 'ds':
-                        args.showDeliverables = true
-                        break
-                    case 'deliverableX':
-                    case 'deliverablesX':
-                    case 'dsX':
-                        args.showDeliverablesX = true
-                        break
-                    case 'TDEstimate':
-                    case 'tdEst':
-                    case 'tdestimate':
-                    case 'tdest':
-                        args.showTDEstimateSchedule = true
-                        break
-                    case 'Milestones':
-                    case 'milestones':
-                        args.showMilestones = true
-                        break
-                    case 'no_warnings':
-                        args.showNoWarnings = true
-                    default:
-                        console.error('Error: unknown command line argument \'', option, '\'')
-                        break
-
-                }
-            })
-        } else 
-        if (typeof args.show == 'string') {
-            if ('sIndex' === args.show) {
-                showScheduleIndex = true
-            } else 
-            if ('deliverables' === args.show || 'deliverable' === args.show || 'ds' === args.show) {
-                args.showDeliverables = true
-            } else 
-            if ('tdestimate' === args.show || 'tdEstimate' == args.show) {
-                args.showTDEstimateSchedule = true
+    if (typeof args.show === 'object') {
+        // if there are multiple '--show xxx' cli options
+        // it will be an object property with multiple elements
+        // e.g., arg.show: ['xxx', 'yyy']
+        args.show.forEach((option) => {
+            let showSetting = showOptions[option]
+            if (typeof showSetting !== 'undefined') {
+                args[showSetting] = true
             } else {
-                console.error('Error: unknown command line argument \'', args.show, '\'')
+                console.error('Error: unknown command line option: \'' + showSetting + '\'')
             }
+        })
+    } else 
+    if (typeof args.show == 'string') {
+        // if there is a single '--show xxx' cli option, 
+        //  it will be a property (e.g., arg.show: 'xxx') 
+        let showSetting = showOptions[args.show]
+        if (typeof showSetting !== 'undefined') {
+            args[showSetting] = true
+        } else {
+            console.error('Error: unknown command line option: \'' + args.show + '\'')
         }
+    } else {
+        console.error('Error: unknown command line option: \'' + args.show + '\'')
     }
     return args
+}
+
+const showOptions = {
+    'sIndex': 'showScheduleIndex',
+    'deliverables': 'showDeliverables',
+    'deliverable': 'showDeliverable',
+    'ds': 'showDeliverable',
+    'deliverableX': 'showDeliverablesX',
+    'deliverablesX': 'showDeliverablesX',
+    'dsX': 'showDeiverablesX',
+    'TDEstimate': 'showTDEstimateSchedule',
+    'tdestimate': 'showTDEstimateSchedule',
+    'tdest': 'showTDEstimateSchedule',
+    'Milestones': 'showMilestones',
+    'milestones': 'showMilestones',
+    'noWarnings': 'showNoWarnings',
+    'onlyActiveTDs': 'showOnlyActiveTDs',
+    'onlyActiveIDs': 'showOnlyActiveIDs',
+    'onlyActiveMilestones': 'showOnlyActiveMilestones'
 }
 
 module.exports.cliArgs = cliArgs

@@ -33,8 +33,8 @@ function readScheduleIndex(fileName, tab) {
     }
     const numCols = stringIndex[lowerRightCol] - stringIndex[upperLeftCol] + 1
     const numRows = lowerRightRow - upperLeftRow + 1
-    // console.log('# cols', numCols)
-    // console.log('# rows', numRows)
+    console.log('# cols', numCols)
+    console.log('# rows', numRows)
 
     const keyCols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S']
     // const riskScoreCols = ['T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -68,26 +68,8 @@ function readScheduleIndex(fileName, tab) {
 
         // only store out interesting columns
         if (keyCols.includes(col)) {
-            let indexType
-            if (col == 'X') {
-                // derive TD/ID from successor count (col E)
-                switch (value) {
-                    case 0:
-                        indexType = 'TD'
-                        break
-                    default:
-                        indexType = 'ID'
-                }
-                if (!data[row]) data[row] = {}
-                data[row].indexType = indexType
-                data[row][headers[col]] = value
-                // console.log('col:', col, 'value:', value, 'data[row]:', data[row])
-            }
-            else {
-                if (!data[row]) data[row] = {}
-                // data[row].row = row
-                data[row][headers[col]] = value
-            }
+            if (!data[row]) data[row] = {}
+            data[row][headers[col]] = value
         }
     }
 

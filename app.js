@@ -30,24 +30,24 @@ function appTopLevel() {
         indexFile = readScheduleIndex(args.fileRoot + args.indexSource, args.indexTab)
     }
     catch (err) {
-        console.error('\nError: no such file or directory (schedule file) \'' + args.fileRoot + args.indexSource + '\'')
+        console.error('\nERROR: no such file or directory (schedule file) \'' + args.fileRoot + args.indexSource + '\'')
         process.exit(-1)
     }
     // if (indexFile === null) {
-    //     console.error('\tError in parsing Schedule Index spreadsheet (' + args.indexSource + ':' + args.indexTab)
+    //     console.error('\tERROR: parsing Schedule Index spreadsheet (' + args.indexSource + ':' + args.indexTab)
     //     process.exit(-1)
     // }
 
     deliverables = parseScheduleIndex(indexFile)
     if (deliverables === null) {
-        console.error('\tError in parsing Schedule Index spreadsheet')
+        console.error('\tERROR: parsing Schedule Index spreadsheet')
         process.exit(-1)
     }
     
     // default std schedule costing
     defaultTDSchedule = readDefaultStdSch(args.fileRoot + args.indexSource, args.defaultTDScheduleTab)
     if (defaultTDSchedule === null) {
-        console.error('\tError in parsing \'default TD Schedule\' tab of ' + args.indexSource + ' spreadsheet')
+        console.error('\tERROR: parsing \'default TD Schedule\' tab of ' + args.indexSource + ' spreadsheet')
         process.exit(-1)
     }
     // console.info('defaultTDSchedule:', defaultTDSchedule)

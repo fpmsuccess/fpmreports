@@ -1,6 +1,11 @@
 const util = require('util')
 
 function tdDisplay(args, td) {
+    // console.info('args.showOnlyActiveTDs:', args.showOnlyActiveTDs)
+    // console.info('td.Active:', td.Active)
+    if ((args.showOnlyActiveTDs || args.showOnlyActiveIDs) && !td.Active)
+        return
+
     console.log(td['Full Deliverable Name'])
     console.group() //for each td
 
