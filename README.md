@@ -1,0 +1,40 @@
+# FPM Schedule Rollup
+
+# CLI Options
+node app.js <options>
+    --fileRoot 'absolute or relative path to the directory containing the Schedule Index'
+        default: './' (current directory)
+
+    --indexSource 'file name of the file containing the Schedule Index'
+        default: 'elbert - std costing.xlsx'
+
+    --indexTab 'tab name of the tab containing the Schedule Index'
+        default: 'Schedule Index'
+
+    --defaultTDScheduleTab 'tab name of the tab containing the Default TD Schedule'
+        default: 'Default TD Schedule'
+
+    --defaultIDScheduleTab 'tab name of the tab containing the Default ID Schedule'
+        default: 'Default ID Schedule'
+
+    --defaultPDScheduleTab 'tab name of the tab containing the Default PD Schedule'
+        default: 'Default PD Schedule'
+
+    --show [sIndex, deliverables, tdEst, milestones]
+        sIndex = show the Scheduler Index (as imported)
+        deliverables = show the deliverables hierarchy
+        milestones = show the TD milestones as part of the deliverable hierarchy
+        NOTE: multiple '--show' options can be specified on the same command line
+
+    --showLevel [pd, id, td, milestones]
+        pd = show only the PD information
+        id = show the PD and ID information
+        td = show the PD, ID, and TD information
+        milestones = show the PD, ID, TD and Milestone information
+        NOTE: only one '--showLevel' option can be specified on one command line
+            default: td
+
+examples:
+  - `node app.js --fileRoot 'c:\somewhere\'`
+  - `node app.js --fileRoot 'c:\somewhere\' --show deliverables`
+  - `node app.js --fileRoot 'c:\somewhere\' --show deliverables --showLimit id`
