@@ -34,7 +34,13 @@ node app.js <options>
         NOTE: only one '--showLevel' option can be specified on one command line
             default: td
 
-examples:
-  - `node app.js --fileRoot 'c:\somewhere\'`
-  - `node app.js --fileRoot 'c:\somewhere\' --show deliverables`
-  - `node app.js --fileRoot 'c:\somewhere\' --show deliverables --showLimit id`
+Win10 examples:
+  - `node app.js --fileRoot ..\StdCosting\`
+  - `node app.js --fileRoot ..\StdCosting\ --show deliverables`
+  - `node app.js --fileRoot ..\StdCosting\ --show deliverables --showLimit id`
+
+
+Linux examples:
+  - `node app.js --fileRoot ~/somewhere/`
+  - `node app.js --fileRoot ~/somewhere/ --show deliverables`
+  - `node app.js --fileRoot ~/somewhere/ --show deliverables --showLimit id`
