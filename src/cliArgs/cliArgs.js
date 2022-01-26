@@ -77,7 +77,7 @@ function cliArgs() {
 
     // handle any command line show options
     if (typeof args.show !== 'undefined') {
-        console.info('\t typeof args.show:', typeof args.show, args.show)
+        // console.info('\t typeof args.show:', typeof args.show, args.show)
         if (typeof args.show === 'object') {
             args.show.forEach((option) => {
                 console.info('\t each show option', option)

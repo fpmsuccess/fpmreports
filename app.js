@@ -23,15 +23,7 @@ function appTopLevel() {
 
     // process cli args options
     const args = cliArgs()
-    console.info('cli args', typeof args, args)
-
-    // const fileRoot = '/mnt/f/Dropbox/Companies/FPM Success, LLC/Consulting Contracts/ApsiWifi/People/Kevin/Std Costing/'
-    // const indexSource = 'elbert - std costing.xlsx'
-    // const indexTab = 'Schedule Index'
-    // const defaultTDScheduleTab = 'Default TD Schedule'
-    // // const defaultIDScheduleTab = 'Default ID Schedule'
-    // // const defaultPDScheduleTab = 'Default PD Schedule'
-    // // const estimateScheduleTab = 'TDxxx Form'
+    // console.info('cli args', typeof args, args)
 
     // Schedule Index
     try {
