@@ -59,14 +59,20 @@ let data = {
 
 // read a spreadsheet and transform into objects
 function readDefaultStdSch(fileName, tab) {
-    // console.error('readDefaultStdSch() fileName:', fileName, 'tab:', tab)
+    console.info('\INFO: readDefaultStdSch() fileName:', fileName, 'tab:', tab)
     const spreadsheet = xlsx.readFile(
         fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
     )
 
     const sheets = spreadsheet.SheetNames
-    // console.error('sheet names:', sheets)
+    if (typeof sheets[tab] === 'undefined') {
+        console.error('\tERROR: defaultTDScheduleTab: ' + '\'' + tab + '\'', 
+            '\n\t\tnot found in Schedule Index :' + '\'' + fileName + '\''
+        )
+        // console.log()
+        return null
+    }
     const sheetName = sheets[0]
     // const sheetData = spreadsheet.Sheets[sheetName]
     const sheetData = spreadsheet.Sheets[tab]
