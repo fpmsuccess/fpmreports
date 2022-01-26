@@ -1,25 +1,20 @@
 const util = require('util')
-const merge = require('lodash.merge')
 
-
-// calculateIdScheduleTotal()
-//      ID Schedule = sumIDIMilestones() + sumTDs()
-//      sumIDIMilestones(id['Specification']
-function calculateIdScheduleTotal(id) {
+function calculateTdScheduleTotal(td) {
     // console.group(td['Full Deliverable Name'])
     // console.info('td[TD Schedule]:', util.inspect(td['TD Schedule'], false, 1, true))
 
     let difficulty = td['TD Schedule']['Difficulty Level']
     difficulty = difficulty.toLowerCase()
-    let skill = td['TD Schedule xxx']['Recommended Skill Level']
+    let skill = td['TD Schedule']['Recommended Skill Level']
     skill = skill.toLowerCase().split(' ').join('')
     let minManHrs = 0
     let expectedManHrs = 0
     let maxManHrs = 0
 
-    // process each TD
-    let milestones = ['Design', "Design Review", "Coding", "Code Review", "Integration", "Unit Test", "Document", "Final Review Prep", "Final Review", 'Merge To Develop']
-    id.tdList.forEach((td) => {
+    // process each milestone
+    let milestones = ['Design', "Design Review", "Coding", "Code Review", "Unit Test", "Document", "Final Review Prep", "Final Review", 'Merge To Develop']
+    milestones.forEach((milestone) => {
         typeof td['TD Schedule'][milestone][difficulty][skill]['min'] !== 'undefined'
             ? minManHrs += td['TD Schedule'][milestone][difficulty][skill]['min'] : ''
         typeof td['TD Schedule'][milestone][difficulty][skill]['expected'] !== 'undefined'
@@ -43,4 +38,4 @@ function calculateIdScheduleTotal(id) {
     return tdTotals
 }
 
-module.exports.calculateIdScheduleTotal = calculateIdScheduleTotal
+module.exports.calculateTdScheduleTotal = calculateTdScheduleTotal
