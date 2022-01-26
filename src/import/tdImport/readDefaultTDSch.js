@@ -66,7 +66,8 @@ function readDefaultStdSch(fileName, tab) {
     )
 
     const sheets = spreadsheet.SheetNames
-    if (typeof sheets[tab] === 'undefined') {
+    if (sheets.indexOf(tab) === -1) {
+        console.info('available sheets:', tab, sheets)
         console.error('\tERROR: defaultTDScheduleTab: ' + '\'' + tab + '\'', 
             '\n\t\tnot found in Schedule Index :' + '\'' + fileName + '\''
         )
