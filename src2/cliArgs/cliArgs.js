@@ -2,10 +2,8 @@ const minimist = require('minimist')
 
 function cliArgs() {
 
-    let cliArgs = {}
-
-    const args = minimist(process.argv.slice(2), { alias: { f: ['file'] } })
-    // console.log('args:', args)
+    const args = minimist(process.argv.slice(2))
+    console.info('args:', args)
 
     if (typeof args.help !== 'undefined' 
         || typeof args['h'] !== 'undefined' 
@@ -25,13 +23,14 @@ function cliArgs() {
 
     // source directory, file, and tab default options
     if (typeof args.fileRoot === 'undefined') {
+        // args.fileRoot = '../../StdCosting/'
         args.fileRoot = '../../StdCosting/'
     }
-    if (typeof args.indexSource === 'undefined') {
-        args.indexSource = 'elbert - std costing.xlsx'
+    if (typeof args.hierarchySource === 'undefined') {
+        args.hierarchySource = 'elbert - std costing.xlsx'
     }
     if (typeof args.indexTab === 'undefined') {
-        args.indexTab = 'Schedule Index'
+        args.indexTab = 'Hierarchy Index'
     }
     if (typeof args.defaultTDScheduleTab === 'undefined') {
         args.defaultTDScheduleTab = 'Default TD Schedule'
@@ -42,21 +41,18 @@ function cliArgs() {
     if (typeof args.defaultPDScheduleTab === 'undefined') {
         args.defaultPDScheduleTab = 'Default PD Schedule'
     }
-    if (typeof args.estimateScheduleTab === 'undefined') {
-        args.estimateScheduleTab = 'TDxxx Form'
-    }
 
     // adjust paths in on Win platform (not Linux)
     if (typeof args.win !== 'undefined') {
         // if on windows fix path separators and file paths
         args.fileRoot = args.fileRoot.replace(/\//g, '\\')
-        args.indexSource = args.indexSource.replace(/\//g, '\\')
+        args.hierarchySource = args.hierarchySource.replace(/\//g, '\\')
     }
 
     // // display output options
     // if (typeof args.hsd !== 'undefined' && args.hsd) {
     //     console.log('show deliverables list details')
-    //     console.log('show Schedule Index')
+    //     console.log('show Hierarchy Index')
     //     console.log('show individual TD')
     //     console.log('show individual ID')
     //     console.log('show TD Schedule info')
@@ -84,25 +80,27 @@ function cliArgs() {
         // it will be an object property with multiple elements
         // e.g., arg.show: ['xxx', 'yyy']
         args.show.forEach((option) => {
+            console.info('arg show object:', option)
             let showSetting = showOptions[option]
             if (typeof showSetting !== 'undefined') {
                 args[showSetting] = true
             } else {
-                console.error('Error: unknown command line option: \'' + showSetting + '\'')
+                console.error('Error: unknown command line option (object): \'' + showSetting + '\'')
             }
         })
     } else 
     if (typeof args.show == 'string') {
         // if there is a single '--show xxx' cli option, 
         //  it will be a property (e.g., arg.show: 'xxx') 
+        console.info('arg show string:', args.show)
         let showSetting = showOptions[args.show]
         if (typeof showSetting !== 'undefined') {
             args[showSetting] = true
         } else {
-            console.error('Error: unknown command line option: \'' + args.show + '\'')
+            console.error('Error: unknown command line option (string): \'' + args.show + '\'')
         }
     } else {
-        console.error('Error: unknown command line option: \'' + args.show + '\'')
+        console.error('Error: typeof args.show != object && != string but is:', typeof args.show)
     }
     return args
 }
@@ -123,7 +121,8 @@ const showOptions = {
     'noWarnings': 'showNoWarnings',
     'onlyActiveTDs': 'showOnlyActiveTDs',
     'onlyActiveIDs': 'showOnlyActiveIDs',
-    'onlyActiveMilestones': 'showOnlyActiveMilestones'
+    'onlyActiveMilestones': 'showOnlyActiveMilestones',
+    'defaultTDSchedule': 'showDefaultTDSchedule'
 }
 
 module.exports.cliArgs = cliArgs

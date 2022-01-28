@@ -58,21 +58,16 @@ let data = {
 }
 
 // read a spreadsheet and transform into objects
-function readDefaultStdSch(fileName, tab) {
-    console.info('\INFO: readDefaultStdSch() fileName:', fileName, 'tab:', tab)
+function readEstTDSchedule(filePath, fileName, tab) {
+    // console.info('readEstTDSchedule() fileName:', fileName, 'tab:', tab)
+    // console.info('readEstTDSchedule() filePath:', filePath, ' fileName:', fileName, 'tab:', tab)
     const spreadsheet = xlsx.readFile(
-        fileName,
+        filePath + fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
     )
 
     const sheets = spreadsheet.SheetNames
-    if (typeof sheets[tab] === 'undefined') {
-        console.error('\tERROR: defaultTDScheduleTab: ' + '\'' + tab + '\'', 
-            '\n\t\tnot found in Schedule Index :' + '\'' + fileName + '\''
-        )
-        // console.log()
-        return null
-    }
+    // console.error('sheet names:', sheets)
     const sheetName = sheets[0]
     // const sheetData = spreadsheet.Sheets[sheetName]
     const sheetData = spreadsheet.Sheets[tab]
@@ -106,15 +101,16 @@ function readDefaultStdSch(fileName, tab) {
     }
 
     milestoneIndex = {
-        'Design': {'start': 1, 'easy':5, 'medium':6, 'hard':7},
-        'Design Review': { 'start': 9, 'easy': 13, 'medium': 14, 'hard': 15 },
-        'Coding': { 'start': 17, 'easy': 21, 'medium': 22, 'hard': 23 },
-        'Code Review': { 'start': 25, 'easy': 29, 'medium': 30, 'hard': 31 },
-        'Unit Test': { 'start': 33, 'easy': 37, 'medium': 38, 'hard': 39 },
-        'Document': { 'start': 41, 'easy': 45, 'medium': 46, 'hard': 47 },
-        'Final Review Prep': { 'start': 49, 'easy': 53, 'medium': 54, 'hard': 55 },
-        'Final Review': { 'start': 57, 'easy': 61, 'medium': 62, 'hard': 63 },
-        'Merge To Develop': { 'start': 65, 'easy': 69, 'medium': 70, 'hard': 71 }
+        'Design': { 'start': 9, 'easy': 12, 'medium': 13, 'hard': 14 },
+        // 'Design Review': { 'start': 9, 'easy': 13, 'medium': 14, 'hard': 15 },
+        // 'Coding - Implementation Time': { 'start': 16, 'easy': 19, 'medium': 20, 'hard': 21 },
+        'Coding': { 'start': 16, 'easy': 19, 'medium': 20, 'hard': 21 },
+        // 'Code Review': { 'start': 25, 'easy': 29, 'medium': 30, 'hard': 31 },
+        // 'Unit Test': { 'start': 33, 'easy': 37, 'medium': 38, 'hard': 39 },
+        // 'Document': { 'start': 41, 'easy': 45, 'medium': 46, 'hard': 47 },
+        // 'Final Review Prep': { 'start': 49, 'easy': 53, 'medium': 54, 'hard': 55 },
+        // 'Final Review': { 'start': 57, 'easy': 61, 'medium': 62, 'hard': 63 },
+        // 'Merge To Develop': { 'start': 65, 'easy': 69, 'medium': 70, 'hard': 71 }
     }
 
     const keyCols = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
@@ -138,17 +134,67 @@ function readDefaultStdSch(fileName, tab) {
         let row = parseInt(colRow.substring(tt))
         let value = sheetData[colRow].v
 
-        // only store out interesting columns
+        // start with the TD specific info in rows 1-6
+        {
+            let error = false
+            let warning = false
+            let errMessage = '\t' + fileName + ':' + tab
+
+            if (row === 1 && col == 'B') {
+                data['Deliverable Name - TD Estimate Form'] = value
+            }
+            if (row === 2 && col == 'B') {
+                data['Deliverable Number'] = value
+            }
+            if (row === 4 && col == 'B') {
+                if (value === 'Level of Difficulty (Example)' || value === '') {
+                    errMessage += '\n\t\t\Error: invalid \'Deliverable Difficulty Level\' selection'
+                    // console.error('\tError: ', fileName, ':', tab, ' has invalid \'Deliverable Difficulty Level\' selection')
+                    error = true
+                } else {
+                    data['Difficulty Level'] = value
+                }
+            }
+            if (row === 5 && col == 'B') {
+                if (value === 'Skill Level (Example)' || value === '') {
+                    errMessage += '\n\t\tError: invalid \'Skill Level\' selection'
+                    // console.error('\tError: ', fileName, ':', tab, ' has invalid \'Skill Level\' selection')
+                    error = true
+                } else {
+                    data['Recommended Skill Level'] = value
+                }
+            }
+            if (row === 6 && col == 'B') {
+                if (value === 'first last' || value === '') {
+                    errMessage += '\n\t\tWarning: invalid \'Person creating Estimate\' selection'
+                    // console.error('\tError: ', fileName, ':', tab, ' has invalid \'Person creating Estimate\' selection')
+                    warning = true
+                } 
+                data['Person Creating Estimate'] = value
+            }
+            // if a parsing error has been detected, note it and continue
+            //  - return null if Deliverable Difficulty Level not set
+            //  - return null if Recommended Skill Level not set
+            if (error || warning) {
+                console.info(errMessage)
+            }
+            if (error === true) {
+                return null
+            }
+        }
+
+        // only process interesting columns
         if (keyCols.includes(col)) {
-            convertMatrix('Design', row, col, value)
-            convertMatrix('Design Review', row, col, value)
-            convertMatrix('Coding', row, col, value)
-            convertMatrix('Code Review', row, col, value)
-            convertMatrix('Unit Test', row, col, value)
-            convertMatrix('Document', row, col, value)
-            convertMatrix('Final Review Prep', row, col, value)
-            convertMatrix('Final Review', row, col, value)
-            convertMatrix('Merge To Develop', row, col, value)
+            data = convertMatrix(data, 'Design', row, col, value)
+            // convertMatrix('Design Review', row, col, value)
+            // convertMatrix('Coding - Implementation Time', row, col, value)
+            data = convertMatrix(data, 'Coding', row, col, value)
+            // convertMatrix('Code Review', row, col, value)
+            // convertMatrix('Unit Test', row, col, value)
+            // convertMatrix('Document', row, col, value)
+            // convertMatrix('Final Review Prep', row, col, value)
+            // convertMatrix('Final Review', row, col, value)
+            // convertMatrix('Merge To Develop', row, col, value)
         }
     }
 
@@ -156,14 +202,14 @@ function readDefaultStdSch(fileName, tab) {
     return data
 }
 
-function convertMatrix(milestone, row, col, value) {
-    // console.info('milestone:', milestone, 'row:', row, 'col:', col, 'value:', value)
-    // console.info('typeof milestoneIndex[milestone]:', typeof milestoneIndex[milestone])
+function convertMatrix(data, milestone, row, col, value) {            // // correct the milestone name difference between the estimate spreadsheet and default
+
     if (typeof milestoneIndex[milestone] === 'undefined') {
         if (col === 'A')
             console.error('\tWarning: milestone:', milestone, 'is not located in milestoneIndex array')
         return
     }
+
     if (row >= milestoneIndex[milestone].start && row <= milestoneIndex[milestone].hard) {
         if (row === milestoneIndex[milestone].start && col === 'A') {
             // console.info('milestone:', milestone, ', row:', row, 
@@ -173,7 +219,7 @@ function convertMatrix(milestone, row, col, value) {
             // //             // data.coding, 
             // //             data[milestone]
             // )
-            data[milestone].name = value
+            // data[milestone].name = value
         } else if (row === milestoneIndex[milestone].easy) {
             if (col === cols.sdiMin) data[milestone].easy.sdi.min = value
             if (col === cols.sdiExpected) data[milestone].easy.sdi.expected = value
@@ -209,6 +255,8 @@ function convertMatrix(milestone, row, col, value) {
             // console.info('data[milestone].hard test:', data[milestone].hard)
         }
     }
+
+    return data
 }
 
-module.exports.readDefaultStdSch = readDefaultStdSch
+module.exports.readEstTDSchedule = readEstTDSchedule

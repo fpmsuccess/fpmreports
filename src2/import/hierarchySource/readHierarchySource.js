@@ -1,15 +1,15 @@
 const xlsx = require('xlsx')
 
 // read a spreadsheet and transform into objects
-function readScheduleIndex(fileName, tab) {
-    // console.error('readMasterFileOutline() fileName:', fileName, 'tab:', tab)
+function readHierarchySource(fileName, tab) {
+    console.error('readMasterFileOutline() fileName:', fileName, 'tab:', tab)
     const spreadsheet = xlsx.readFile(
         fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
     )
 
     const sheets = spreadsheet.SheetNames
-    // console.error('sheet names:', sheets)
+    console.error('sheet names:', sheets)
     const sheetName = sheets[0]
     // const sheetData = spreadsheet.Sheets[sheetName]
     const sheetData = spreadsheet.Sheets[tab]
@@ -33,8 +33,8 @@ function readScheduleIndex(fileName, tab) {
     }
     const numCols = stringIndex[lowerRightCol] - stringIndex[upperLeftCol] + 1
     const numRows = lowerRightRow - upperLeftRow + 1
-    console.log('# cols', numCols)
-    console.log('# rows', numRows)
+    // console.log('# cols', numCols)
+    // console.log('# rows', numRows)
 
     const keyCols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S']
     // const riskScoreCols = ['T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -80,4 +80,4 @@ function readScheduleIndex(fileName, tab) {
 
 }
 
-module.exports.readScheduleIndex = readScheduleIndex
+module.exports.readHierarchySource = readHierarchySource

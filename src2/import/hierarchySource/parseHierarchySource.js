@@ -8,8 +8,8 @@ product = {
 idList = []
 tdList = []
 
-// transform schedule index  objects into a hierarchy
-function parseScheduleIndex(scheduleIndex) {
+// transform Hierarchy Index  objects into a hierarchy
+function parseHierarchySource(scheduleIndex) {
 
     let currentId = -1
 
@@ -45,4 +45,4 @@ function parseScheduleIndex(scheduleIndex) {
     return product
 }
 
-module.exports.parseScheduleIndex = parseScheduleIndex
+module.exports.parseHierarchySource = parseHierarchySource

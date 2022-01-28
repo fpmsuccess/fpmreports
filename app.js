@@ -1,68 +1,59 @@
 const util = require('util')
 
 // import from data sources
-const { readScheduleIndex } = require('./src/import/scheduleIndex/readScheduleIndex.js')
-const { parseScheduleIndex } = require('./src/import/scheduleIndex/parseScheduleIndex.js')
-const { readDefaultStdSch } = require('./src/import/tdImport/readDefaultTDSch.js')
-const { tdRollupSchedule } = require('./src/schedule/tdSchedule/tdRollupSchedule.js')
-const { idRollupSchedule } = require('./src/schedule/idSchedule/idRollupSchedule.js')
+const { readHierarchySource } = require('./src2/import/hierarchySource/readHierarchySource.js')
+const { parseHierarchySource } = require('./src2/import/hierarchySource/parseHierarchySource.js')
+const { readDefaultTDSchedue } = require('./src2/import/tdImport/readDefaultTDSchedule.js')
+const { tdRollupSchedule } = require('./src2/schedule/tdSchedule/tdRollupSchedule.js')
+const { idRollupSchedule } = require('./src2/schedule/idSchedule/idRollupSchedule.js')
 
 // translate manHrs into CalendarDays
 
 // display results to console, capture to text file, export as .csv/.xlsx
-const { displayDeliverables } = require('./src/output/displayDeliverableHierarchy.js')
-const { cliArgs } = require('./src/cliArgs/cliArgs.js')
-
-deliverables = {}
-defaultTDSchedule = {}
-estTDSchedule = {}
+const { displayDeliverables } = require('./src2/output/displayDeliverableHierarchy.js')
+const { cliArgs } = require('./src2/cliArgs/cliArgs.js')
 
 appTopLevel()
 
 function appTopLevel() {
 
+    let deliverables = {}
+    let defaultTDSchedule = {}
+
     // process cli args options
     const args = cliArgs()
     console.info('cli args', typeof args, args)
 
-    // const fileRoot = '/mnt/f/Dropbox/Companies/FPM Success, LLC/Consulting Contracts/ApsiWifi/People/Kevin/Std Costing/'
-    // const indexSource = 'elbert - std costing.xlsx'
-    // const indexTab = 'Schedule Index'
-    // const defaultTDScheduleTab = 'Default TD Schedule'
-    // // const defaultIDScheduleTab = 'Default ID Schedule'
-    // // const defaultPDScheduleTab = 'Default PD Schedule'
-    // // const estimateScheduleTab = 'TDxxx Form'
-
-    // Schedule Index
+    // Hierarchy Index
     try {
-        indexFile = readScheduleIndex(args.fileRoot + args.indexSource, args.indexTab)
+        indexFile = readHierarchySource(args.fileRoot + args.hierarchySource, args.indexTab)
     }
     catch (err) {
-        console.error('\nERROR: no such file or directory (schedule file) \'' + args.fileRoot + args.indexSource + '\'')
+        console.error('\nERROR: no such file or directory (schedule file) \'' + args.fileRoot + args.hierarchySource + '\'')
         process.exit(-1)
     }
     // if (indexFile === null) {
-    //     console.error('\tERROR: parsing Schedule Index spreadsheet (' + args.indexSource + ':' + args.indexTab)
+    //     console.error('\tERROR: parsing Hierarchy Index spreadsheet (' + args.hierarchySource + ':' + args.indexTab)
     //     process.exit(-1)
     // }
 
-    deliverables = parseScheduleIndex(indexFile)
+    deliverables = parseHierarchySource(indexFile)
     if (deliverables === null) {
-        console.error('\tERROR: parsing Schedule Index spreadsheet')
+        console.error('\tERROR: parsing Hierarchy Index spreadsheet')
         process.exit(-1)
     }
     
     // default std schedule costing
-    defaultTDSchedule = readDefaultStdSch(args.fileRoot + args.indexSource, args.defaultTDScheduleTab)
+    defaultTDSchedule = readDefaultTDSchedue(args.fileRoot + args.hierarchySource, args.defaultTDScheduleTab)
     if (defaultTDSchedule === null) {
-        console.error('\tERROR: parsing \'default TD Schedule\' tab of ' + args.indexSource + ' spreadsheet')
+        console.error('\tERROR: parsing \'default TD Schedule\' tab of ' + args.hierarchySource + ' spreadsheet')
         process.exit(-1)
     }
     // console.info('defaultTDSchedule:', defaultTDSchedule)
-    // console.info('defaultTDSchedule:', util.inspect(defaultTDSchedule, false, 3, true))
+    // console.info('defaultTDSchedule ', args.defaultTDScheduleTab,':', util.inspect(defaultTDSchedule, false, 3, true))
 
     // walk the deliverables list and add TD Schedule info 
-    deliverables = tdRollupSchedule(deliverables)
+    deliverables = tdRollupSchedule(deliverables, defaultTDSchedule)
     if (deliverables === null) {
         console.error('\tError in adding TD Schedule info to deliverables list')
         process.exit(-1)
@@ -76,7 +67,7 @@ function appTopLevel() {
     }
 
 
-
+    
     // display the raw content
     if (args.showScheduleIndex) {
         console.info('index:', indexFile)
@@ -84,6 +75,10 @@ function appTopLevel() {
     if (args.showDeliverablesX) {
         console.info('deliverables:', util.inspect(deliverables, false, 4, true))
         // console.info('deliverables.idList:', util.inspect(deliverables.idList, false, 3, true))
+    }
+    if (args.showDefaultTDSchedule) {
+        console.info('defaultTDSchedule ', args.defaultTDScheduleTab, ':', util.inspect(defaultTDSchedule, false, 3, true))
+        // console.info('defaultTDSchedule:', defaultTDSchedule)
     }
     // display the deliverable hierarchy
     if (args.showDeliverables)
