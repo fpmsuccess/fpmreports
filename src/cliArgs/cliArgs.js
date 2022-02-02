@@ -3,7 +3,7 @@ const minimist = require('minimist')
 function cliArgs() {
 
     const args = minimist(process.argv.slice(2))
-    console.info('args:', args)
+    // console.info('args:', args)
 
     if (typeof args.help !== 'undefined' 
         || typeof args['h'] !== 'undefined' 
@@ -21,16 +21,16 @@ function cliArgs() {
         process.exit(0)
     }
 
-    // source directory, file, and tab default options
+    // source directory, file, tab default options, json store directory
     if (typeof args.fileRoot === 'undefined') {
         // args.fileRoot = '../../StdCosting/'
         args.fileRoot = '../../StdCosting/'
     }
     if (typeof args.hierarchySource === 'undefined') {
-        args.hierarchySource = 'elbert - std costing.xlsx'
+        args.hierarchySource = 'elbert.xlsx'
     }
-    if (typeof args.indexTab === 'undefined') {
-        args.indexTab = 'Hierarchy Index'
+    if (typeof args.hierarchyTab === 'undefined') {
+        args.hierarchyTab = 'Hierarchy Index'
     }
     if (typeof args.defaultTDScheduleTab === 'undefined') {
         args.defaultTDScheduleTab = 'Default TD Schedule'
@@ -40,6 +40,9 @@ function cliArgs() {
     }
     if (typeof args.defaultPDScheduleTab === 'undefined') {
         args.defaultPDScheduleTab = 'Default PD Schedule'
+    }
+    if (typeof args.jsonRoot === 'undefined') {
+        args.jsonRoot = './jsonStorage/'
     }
 
     // adjust paths in on Win platform (not Linux)
@@ -80,7 +83,7 @@ function cliArgs() {
         // it will be an object property with multiple elements
         // e.g., arg.show: ['xxx', 'yyy']
         args.show.forEach((option) => {
-            console.info('arg show object:', option)
+            // console.info('arg show object:', option)
             let showSetting = showOptions[option]
             if (typeof showSetting !== 'undefined') {
                 args[showSetting] = true
@@ -99,8 +102,10 @@ function cliArgs() {
         } else {
             console.error('Error: unknown command line option (string): \'' + args.show + '\'')
         }
-    } else {
-        console.error('Error: typeof args.show != object && != string but is:', typeof args.show)
+    } 
+    else {
+        // bugbug #1 resolve 'typeof args.show != (object or string) condition
+        // console.error('Error: typeof args.show != object && != string but is:', typeof args.show)
     }
     return args
 }

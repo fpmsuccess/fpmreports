@@ -1,30 +1,35 @@
 const xlsx = require('xlsx')
 const util = require('util')
 
-product = {
-    info: {},
-    idList: []
-}
-idList = []
-tdList = []
-
 // transform Hierarchy Index  objects into a hierarchy
-function parseHierarchySource(scheduleIndex) {
+function xformHierarchySource(rawHierarchySource) {
+
+    // create new obj to prevent impact on original
+    const rawHierarchySourceClone = JSON.parse(JSON.stringify(rawHierarchySource))
+
+    let rawProduct = {
+        info: {},
+        idList: []
+    }
+    // let idList = []
+    let tdList = []
 
     let currentId = -1
 
-    // first build the property and id list
-    scheduleIndex.forEach((line, index) => {
+    // walk thru the raw source and build the property and id list
+    rawHierarchySourceClone.forEach((line) => {
         // console.info(line.Index, line.Type, ', ', line['Full Deliverable Name'], ', ', line.Predecessor)
+        if (line === null)
+            return
         switch (line.Type) {
             case 'PD':
-                product.info = line
+                rawProduct.info = line
                 break
             case 'ID':
-                idList.push(line)
+                rawProduct.idList.push(line)
                 if (currentId >= 0) {
                     // console.info(`update id[$tdList]:`, currentId, tdList.length)
-                    idList[currentId].tdList = tdList
+                    rawProduct.idList[currentId].tdList = tdList
                 }
                 currentId++     // this lets us update the id.td list after all collected
                 tdList = []     // reset the tdList for the new ID
@@ -34,15 +39,15 @@ function parseHierarchySource(scheduleIndex) {
                 break
         }
     })
-    idList[currentId].tdList = tdList        // ensure the last group of TDs are captured back to the ID
-    product.idList = idList 
+    // idList[currentId].tdList = tdList        // ensure the last group of TDs are captured back to the ID
+    // rawProduct.idList = idList 
 
     // display results
     // console.info('product:', util.inspect(product, false, null, true))
     // console.info('product:', util.inspect(product, false, 2, true))
     // console.info('idList', product.idList.length)
 
-    return product
+    return rawProduct
 }
 
-module.exports.parseHierarchySource = parseHierarchySource
+module.exports.xformHierarchySource = xformHierarchySource

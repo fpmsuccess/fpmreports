@@ -8,7 +8,7 @@ node app.js <options>
     --hierarchySource 'file name of the file containing the Hierarchy Index'
         default: 'elbert - std costing.xlsx'
 
-    --indexTab 'tab name of the tab containing the Hierarchy Index'
+    --hierarchyTab 'tab name of the tab containing the Hierarchy Index'
         default: 'Hierarchy Index'
 
     --defaultTDScheduleTab 'tab name of the tab containing the Default TD Schedule'
