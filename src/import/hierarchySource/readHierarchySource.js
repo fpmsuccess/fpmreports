@@ -3,19 +3,26 @@ const xlsx = require('xlsx')
 
 // read a spreadsheet and transform into objects
 function readHierarchySource(filePath, fileName, tab) {
-    // console.error('readHierarchySource() filePath:', filePath, 'fileName:', fileName, 'tab:', tab)
-    const spreadsheet = xlsx.readFile(
-        filePath + fileName,
-        { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
-    )
+    console.error('readHierarchySource() filePath:', filePath, 'fileName:', fileName, 'tab:', tab)
+    
+    let spreadsheet
+    try {
+        spreadsheet = xlsx.readFile(
+            filePath + fileName,
+            { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
+        )
+    } catch (err) {
+        throw 'Error: File: ' + filePath + fileName + ' doesn\'t exist'
+    }
     // console.info(' ... successfully read spreadsheet')
 
     const sheets = spreadsheet.SheetNames
     // console.info('sheet names:', sheets)
-    const sheetName = sheets[0]
-    // const sheetData = spreadsheet.Sheets[sheetName]
     const sheetData = spreadsheet.Sheets[tab]
-    // console.info('sheetName:sheetData: %s', sheetName, JSON.stringify(sheetData, null, 2))
+    // console.info('sheetData', typeof sheetData === 'undefined', sheetData)
+    if (typeof sheetData === 'undefined') {
+        throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
+    }
 
     // figure out active cell bounding box
     const upperLeft = sheetData['!ref'].split(':')[0]
