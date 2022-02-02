@@ -11,7 +11,7 @@ function importHierarchySource(args) {
     try {
         rawHierarchySource = readHierarchySource(args.fileRoot, args.hierarchySource, args.hierarchyTab)
     } catch (err) {
-        if (err) throw err
+        throw err
     }
 
     return rawHierarchySource      // will need to be updated!

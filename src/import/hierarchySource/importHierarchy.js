@@ -18,7 +18,7 @@ function importHierarchy(args) {
         rawHierarchySource = readHierarchySource(args.fileRoot, args.hierarchySource, args.hierarchyTab)
         // console.info(rawHierarchySource) 
     } catch (err) {
-        if (err) throw err
+        throw err
     }
     // console.info('rawHierarchySource:', util.inspect(rawHierarchySource, false, null, true))
     try {
@@ -32,7 +32,7 @@ function importHierarchy(args) {
         // console.info('\tfileName:', args.hierarchySource, saveFile)
         saveHierarchySource(rawHierarchySource, args.jsonRoot, saveFile)
     } catch (err) {
-        if (err) throw err
+        throw err
     }
 
     // transform the excel info into Hierarchy Source object and save it to JSON
@@ -46,7 +46,7 @@ function importHierarchy(args) {
     try {
         saveHierarchySource(hierarchySource, args.jsonRoot, args.hierarchySource)
     } catch (err) {
-        if (err) throw err
+        throw err
     }
 
     // transform the excel info into flat Hierarchy Source object and save it to JSON
@@ -68,7 +68,7 @@ function importHierarchy(args) {
         // console.info('\tfileName:', args.hierarchySource, saveFile)
         saveHierarchySource(hierarchySourceFlat, args.jsonRoot, saveFile)
     } catch (err) {
-        if (err) throw err
+        throw err
     }
 
     return hierarchySource

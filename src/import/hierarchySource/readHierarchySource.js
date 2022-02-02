@@ -3,7 +3,7 @@ const xlsx = require('xlsx')
 
 // read a spreadsheet and transform into objects
 function readHierarchySource(filePath, fileName, tab) {
-    console.error('readHierarchySource() filePath:', filePath, 'fileName:', fileName, 'tab:', tab)
+    // console.error('readHierarchySource() filePath:', filePath, 'fileName:', fileName, 'tab:', tab)
     
     let spreadsheet
     try {

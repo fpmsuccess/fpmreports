@@ -2,11 +2,10 @@ const util = require('util')
 
 // import from data sources
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
-const { parseHierarchySource } = require('./src/parse/hierarchySource/parseHierarchySource.js')
-// const { readDefaultTDSchedue } = require('./src/import/tdImport/readDefaultTDSchedule.js')
-// const { tdRollupSchedule } = require('./src/schedule/tdSchedule/tdRollupSchedule.js')
-// const { idRollupSchedule } = require('./src/schedule/idSchedule/idRollupSchedule.js')
 
+// import default milestones
+// import estimate milestones
+// rollup deliverable (TD, ID, PD)
 // translate manHrs into CalendarDays
 
 // display results to console, capture to text file, export as .csv/.xlsx
@@ -34,7 +33,7 @@ function appTopLevel() {
     const hierarchySource = importHierarchy(args)
     // console.info('hierarchySource:', util.inspect(hierarchySource, false, null, true))
 
-    // import milestones (PD, ID, TD) and associate with specific PD, ID, or TD
+    // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
     
 
 }
