@@ -64,7 +64,6 @@ function readMilestones(args, name, fileRoot, fileName, tab) {
     )
 
     const sheets = spreadsheet.SheetNames
-    // console.info('readMilestones(): sheets:', sheets)
     if (sheets.indexOf(tab) === -1) {
         console.error('\tERROR: tab: ' + '\'' + tab + '\'', 
             '\n\t\tnot found in ' + '\'' + fileRoot + fileName + '\''
@@ -72,8 +71,6 @@ function readMilestones(args, name, fileRoot, fileName, tab) {
         // console.log()
         return null
     }
-    const sheetName = sheets[0]
-    // const sheetData = spreadsheet.Sheets[sheetName]
     const sheetData = spreadsheet.Sheets[tab]
     // console.error('sheetName:sheetData: %s', sheetName, JSON.stringify(sheetData))
 

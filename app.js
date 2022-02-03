@@ -44,12 +44,12 @@ function appTopLevel() {
 
     // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
     importDefaultMilestones(args)
-
+    
     // import estimate milestones
     importEstimateMilestones(args)
 
     // rollup deliverable (TD, ID, PD)
-    // computeDelierableRollup(args)
+    // computeTDDelierableRollup(args)
 
     // man-hours to Calendar Days
     // computeManHourstoCalendarDays(args)

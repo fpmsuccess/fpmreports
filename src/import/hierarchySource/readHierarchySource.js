@@ -19,7 +19,6 @@ function readHierarchySource(filePath, fileName, tab) {
     const sheets = spreadsheet.SheetNames
     // console.info('sheet names:', sheets)
     const sheetData = spreadsheet.Sheets[tab]
-    // console.info('sheetData', typeof sheetData === 'undefined', sheetData)
     if (typeof sheetData === 'undefined') {
         throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
     }

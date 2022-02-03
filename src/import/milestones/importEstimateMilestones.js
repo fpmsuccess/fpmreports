@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const { readMilestones } = require('./readMilestones.js')
+const { readEstimateMilestones } = require('./readEstimateMilestones.js')
 const { saveMilestone } = require('./saveMilestone.js')
 
 function importEstimateMilestones(args) {
@@ -36,7 +36,7 @@ function importEstimateMilestones(args) {
         tab  = id['Estimate Tab']
         let milestone = []
         let name = id['Deliverable ID'] + 'Estimate'
-        milestone = readMilestones(args, name, path, file, tab)
+        milestone = readEstimateMilestones(args, name, path, file, tab)
         saveMilestone(milestone, args.jsonRoot, name)
     })
 
@@ -48,7 +48,7 @@ function importEstimateMilestones(args) {
         tab = td['Estimate Tab']
         let milestone = []
         let name = td['Deliverable ID'] + 'Estimate'
-        milestone = readMilestones(args, name, path, file, tab)
+        milestone = readEstimateMilestones(args, name, path, file, tab)
         saveMilestone(milestone, args.jsonRoot, name)
     })
 

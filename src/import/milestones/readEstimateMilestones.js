@@ -2,55 +2,46 @@ const xlsx = require('xlsx')
 
 let data = {
     "Design": {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Design Review': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
-    "Coding": {
-        "name": "",
+    "Coding - Implementation Time": {
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Code Review': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Unit Test': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Document': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Final Review Prep': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Final Review': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
     },
     'Merge To Develop': {
-        "name": "",
         "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
         "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
@@ -58,20 +49,33 @@ let data = {
 }
 
 // read a spreadsheet and transform into objects
-function readEstTDSchedule(filePath, fileName, tab) {
-    // console.info('readEstTDSchedule() fileName:', fileName, 'tab:', tab)
-    // console.info('readEstTDSchedule() filePath:', filePath, ' fileName:', fileName, 'tab:', tab)
+function readEstimateMilestones(args, name, fileRoot, fileName, tab) {
+    if (args.showInfo) {
+        console.info('\INFO: readEstimateMilestones() for:', name,
+            '\n\tfileRoot:', fileRoot,
+            '\n\tfileName:', fileName,
+            '\n\ttab:', tab
+        )
+    }
+
     const spreadsheet = xlsx.readFile(
-        filePath + fileName,
+        fileRoot + fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
     )
 
     const sheets = spreadsheet.SheetNames
-    // console.error('sheet names:', sheets)
-    const sheetName = sheets[0]
-    // const sheetData = spreadsheet.Sheets[sheetName]
+    if (sheets.indexOf(tab) === -1) {
+        console.error('\tERROR: tab: ' + '\'' + tab + '\'',
+            '\n\t\tnot found in ' + '\'' + fileRoot + fileName + '\''
+        )
+        // console.log()
+        return null
+    }
     const sheetData = spreadsheet.Sheets[tab]
-    // console.error('sheetName:sheetData: %s', sheetName, JSON.stringify(sheetData))
+    // console.info('sheet names:', sheets)
+    if (typeof sheetData === 'undefined') {
+        throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
+    }
 
     // figure out active cell bounding box
     const upperLeft = sheetData['!ref'].split(':')[0]
@@ -103,8 +107,7 @@ function readEstTDSchedule(filePath, fileName, tab) {
     milestoneIndex = {
         'Design': { 'start': 9, 'easy': 12, 'medium': 13, 'hard': 14 },
         // 'Design Review': { 'start': 9, 'easy': 13, 'medium': 14, 'hard': 15 },
-        // 'Coding - Implementation Time': { 'start': 16, 'easy': 19, 'medium': 20, 'hard': 21 },
-        'Coding': { 'start': 16, 'easy': 19, 'medium': 20, 'hard': 21 },
+        'Coding - Implementation Time': { 'start': 16, 'easy': 19, 'medium': 20, 'hard': 21 },
         // 'Code Review': { 'start': 25, 'easy': 29, 'medium': 30, 'hard': 31 },
         // 'Unit Test': { 'start': 33, 'easy': 37, 'medium': 38, 'hard': 39 },
         // 'Document': { 'start': 41, 'easy': 45, 'medium': 46, 'hard': 47 },
@@ -134,22 +137,32 @@ function readEstTDSchedule(filePath, fileName, tab) {
         let row = parseInt(colRow.substring(tt))
         let value = sheetData[colRow].v
 
-        // start with the TD specific info in rows 1-6
+        // start with the TD specific info
         {
             let error = false
-            let warning = false
-            let errMessage = '\t' + fileName + ':' + tab
-
             if (row === 1 && col == 'B') {
-                data['Deliverable Name - TD Estimate Form'] = value
+                // console.info('checking row 1, col B value:', row, col, value)
+                if (value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has missing \'Deliverable Name\' entry')
+                    error = true
+                } else {
+                    // console.info('\tInfo: Saving Deliverable Name:', value)
+                    data['Deliverable Name - TD Estimate Form'] = value
+                }
             }
             if (row === 2 && col == 'B') {
-                data['Deliverable Number'] = value
+                // console.info('checking row 2, col B value:', row, col, value)
+                if (value === '') {
+                    console.error('\tError: ', fileName, ':', tab, ' has missing \'Deliverable Number\' entry')
+                    error = true
+                } else {
+                    // console.info('\tInfo: Saving Deliverable Number:', value)
+                    data['Deliverable Number'] = value
+                }
             }
             if (row === 4 && col == 'B') {
                 if (value === 'Level of Difficulty (Example)' || value === '') {
-                    errMessage += '\n\t\t\Error: invalid \'Deliverable Difficulty Level\' selection'
-                    // console.error('\tError: ', fileName, ':', tab, ' has invalid \'Deliverable Difficulty Level\' selection')
+                    console.error('\tError: ', fileName, ':', tab, ' has invalid \'Deliverable Difficulty Level\' selection')
                     error = true
                 } else {
                     data['Difficulty Level'] = value
@@ -157,8 +170,7 @@ function readEstTDSchedule(filePath, fileName, tab) {
             }
             if (row === 5 && col == 'B') {
                 if (value === 'Skill Level (Example)' || value === '') {
-                    errMessage += '\n\t\tError: invalid \'Skill Level\' selection'
-                    // console.error('\tError: ', fileName, ':', tab, ' has invalid \'Skill Level\' selection')
+                    console.error('\tError: ', fileName, ':', tab, ' has invalid \'Skill Level\' selection')
                     error = true
                 } else {
                     data['Recommended Skill Level'] = value
@@ -166,29 +178,25 @@ function readEstTDSchedule(filePath, fileName, tab) {
             }
             if (row === 6 && col == 'B') {
                 if (value === 'first last' || value === '') {
-                    errMessage += '\n\t\tWarning: invalid \'Person creating Estimate\' selection'
-                    // console.error('\tError: ', fileName, ':', tab, ' has invalid \'Person creating Estimate\' selection')
-                    warning = true
-                } 
-                data['Person Creating Estimate'] = value
+                    console.error('\tError: ', fileName, ':', tab, ' has invalid \'Person creating Estimate\' selection')
+                    error = true
+                } else {
+                    data['Person Creating Estimate'] = value
+                }
             }
-            // if a parsing error has been detected, note it and continue
-            //  - return null if Deliverable Difficulty Level not set
-            //  - return null if Recommended Skill Level not set
-            if (error || warning) {
-                console.info(errMessage)
-            }
+
+            // if a parsing error has been detected return with a null
             if (error === true) {
+                console.info('\tWarning: parsing error on TDxxx Form')
                 return null
             }
         }
 
         // only process interesting columns
         if (keyCols.includes(col)) {
-            data = convertMatrix(data, 'Design', row, col, value)
+            convertMatrix('Design', row, col, value)
             // convertMatrix('Design Review', row, col, value)
-            // convertMatrix('Coding - Implementation Time', row, col, value)
-            data = convertMatrix(data, 'Coding', row, col, value)
+            convertMatrix('Coding - Implementation Time', row, col, value)
             // convertMatrix('Code Review', row, col, value)
             // convertMatrix('Unit Test', row, col, value)
             // convertMatrix('Document', row, col, value)
@@ -202,14 +210,14 @@ function readEstTDSchedule(filePath, fileName, tab) {
     return data
 }
 
-function convertMatrix(data, milestone, row, col, value) {            // // correct the milestone name difference between the estimate spreadsheet and default
-
+function convertMatrix(milestone, row, col, value) {
+    // console.info('milestone:', milestone, 'row:', row, 'col:', col, 'value:', value)
+    // console.info('typeof milestoneIndex[milestone]:', typeof milestoneIndex[milestone])
     if (typeof milestoneIndex[milestone] === 'undefined') {
         if (col === 'A')
             console.error('\tWarning: milestone:', milestone, 'is not located in milestoneIndex array')
         return
     }
-
     if (row >= milestoneIndex[milestone].start && row <= milestoneIndex[milestone].hard) {
         if (row === milestoneIndex[milestone].start && col === 'A') {
             // console.info('milestone:', milestone, ', row:', row, 
@@ -255,8 +263,6 @@ function convertMatrix(data, milestone, row, col, value) {            // // corr
             // console.info('data[milestone].hard test:', data[milestone].hard)
         }
     }
-
-    return data
 }
 
-module.exports.readEstTDSchedule = readEstTDSchedule
+module.exports.readEstimateMilestones = readEstimateMilestones
