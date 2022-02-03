@@ -5,7 +5,7 @@ function rollupTDs(args) {
 
     // start with Hierarchy Source
     dbLocation = args.jsonRoot + args.hierarchyName + 'Flat' + '.json'
-    console.info('dbLocation:', dbLocation)
+    // console.info('dbLocation:', dbLocation)
 
     const flatJson = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
     hierarchySourceFlat = JSON.parse(flatJson)

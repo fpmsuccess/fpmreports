@@ -3,9 +3,12 @@ const fs = require('fs')
 // const chalk = require('chalk')
 
 function rollupTD(args, td) {
-    console.group(td['Full Deliverable Name'])
-    console.info('default source:', 'TDDefaultMilestones')
-    console.info('estimate source:', td['Estimate File Name'] + ':' + td['Estimate Tab'])
+
+    if (args.showInfo) {
+        console.group(td['Full Deliverable Name'])
+        console.info('default source:', 'TDDefaultMilestones')
+        console.info('estimate source:', td['Estimate File Name'] + ':' + td['Estimate Tab'])
+    }
 
     let dbLocation = ''
     let defaultName = ''
@@ -40,12 +43,10 @@ function rollupTD(args, td) {
         combined = estimateMilestones
     }
 
-    if (td['Deliverable ID'] === 'TD102') {
-        console.info('TD202:', combined)
+    if (args.showInfo) {
+        console.groupEnd(td)
+        console.log()
     }
-
-    console.groupEnd(td)
-    console.log()
 }
 
 module.exports.rollupTD = rollupTD
