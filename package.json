@@ -1,6 +1,6 @@
 {
   "name": "schedule",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Compute the project schedule duration from spreadsheet input",
   "main": "app.js",
   "scripts": {

@@ -49,10 +49,10 @@ let data = {
 }
 
 // read a spreadsheet and transform into objects
-function readDefaultTDSchedue(fileName, tab) {
-    // console.info('\INFO: readDefaultStdSch() fileName:', fileName, 'tab:', tab)
+function readMilestones(fileRoot, fileName, tab) {
+    console.info('\INFO: readDefaultStdSch() fileRoot:', fileRoot, ' fileName:', fileName, 'tab:', tab)
     const spreadsheet = xlsx.readFile(
-        fileName,
+        fileRoot + fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
     )
 
@@ -202,4 +202,4 @@ function convertMatrix(milestone, row, col, value) {
     }
 }
 
-module.exports.readDefaultTDSchedue = readDefaultTDSchedue
+module.exports.readMilestones = readMilestones

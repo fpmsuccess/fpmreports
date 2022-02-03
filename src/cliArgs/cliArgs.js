@@ -22,24 +22,38 @@ function cliArgs() {
     }
 
     // source directory, file, tab default options, json store directory
+    if (typeof args.argsOnly === 'undefined') {
+        args.showArgsOnly = true
+    }
     if (typeof args.fileRoot === 'undefined') {
         // args.fileRoot = '../../StdCosting/'
         args.fileRoot = '../../StdCosting/'
     }
     if (typeof args.hierarchySource === 'undefined') {
         args.hierarchySource = 'elbert.xlsx'
+        args.hierarchyName = 'elbert'
+    } else {
+        let index = args.hierarchySource.lastIndexOf('.')
+        if (index === -1) {
+            args.hierarchyName = args.hierarchySource
+        } else {
+            args.hierarchyName = args.hierarchySource.substr(0, index)
+        }
     }
     if (typeof args.hierarchyTab === 'undefined') {
         args.hierarchyTab = 'Hierarchy Index'
     }
-    if (typeof args.defaultTDScheduleTab === 'undefined') {
-        args.defaultTDScheduleTab = 'Default TD Schedule'
+    if (typeof args.tdDefaultMilestonesTab === 'undefined') {
+        args.tdDefaultMilestonesTab = 'TD Default Milestones'
     }
-    if (typeof args.defaultIDScheduleTab === 'undefined') {
-        args.defaultIDScheduleTab = 'Default ID Schedule'
+    if (typeof args.tdZeroMilestonesTab === 'undefined') {
+        args.tdZeroMilestonesTab = 'TD Zero Milestones'
     }
-    if (typeof args.defaultPDScheduleTab === 'undefined') {
-        args.defaultPDScheduleTab = 'Default PD Schedule'
+    if (typeof args.idDefaultMilestonesTab === 'undefined') {
+        args.idDefaultMilestonesTab = 'ID Default Milestones'
+    }
+    if (typeof args.pdDefaultMilestonesTab === 'undefined') {
+        args.pdDefaultMilestonesTab = 'PD Default Milestones'
     }
     if (typeof args.jsonRoot === 'undefined') {
         args.jsonRoot = './jsonStorage/'

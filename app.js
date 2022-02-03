@@ -1,12 +1,15 @@
 const util = require('util')
+const { version } = require('./package.json')
 
 // import from data sources
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
+const { importMilestones } = require('./src/import/milestones/importMilestones.js')
 
-// import default milestones
-// import estimate milestones
-// rollup deliverable (TD, ID, PD)
-// translate manHrs into CalendarDays
+// WORK
+//  - import default milestones
+//  - import estimate milestones
+//  - rollup deliverable (TD, ID, PD)
+//  - translate manHrs into CalendarDays
 
 // display results to console, capture to text file, export as .csv/.xlsx
 const { displayDeliverables } = require('./src/output/displayDeliverableHierarchy.js')
@@ -17,9 +20,14 @@ appTopLevel()
 
 function appTopLevel() {
 
+    // show app version
+    console.log('\tversion: ', version)
+
     // process cli args options
     const args = cliArgs()
     console.info('cli args', typeof args, args)
+
+    if (args.argsOnly) return
 
     // import Hierarchy Source 
     //  - rawHierarchySource: simple import from excel files
@@ -34,6 +42,14 @@ function appTopLevel() {
     // console.info('hierarchySource:', util.inspect(hierarchySource, false, null, true))
 
     // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
-    
+    importMilestones(args)
 
+    // import estimate milestones
+    // importEstimateMilestones(args)
+
+    // rollup deliverable (TD, ID, PD)
+    // computeDelierableRollup(args)
+
+    // man-hours to Calendar Days
+    // computeManHourstoCalendarDays(args)
 }
