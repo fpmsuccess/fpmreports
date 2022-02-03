@@ -1,7 +1,7 @@
 const fs = require('fs')
 
 const { readEstimateMilestones } = require('./readEstimateMilestones.js')
-const { saveDatapoint } = require('../../utilities/saveDatapoint.js')
+const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
 
 function importEstimateMilestones(args) {
     // console.info('\INFO: importEstimateMilestones()')
@@ -29,7 +29,7 @@ function importEstimateMilestones(args) {
         //      to ensure applicable for ID estimates
         data = readEstimateMilestones(args, datapointName, 
             id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
-        saveDatapoint(args, data, datapointName)
+        storeDatapoint(args, data, datapointName)
     })
 
     // process TD milestone estimates
@@ -38,7 +38,7 @@ function importEstimateMilestones(args) {
         let datapointName = td['Deliverable ID'] + 'Estimate'
         data = readEstimateMilestones(args, datapointName,
             td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
-        saveDatapoint(args, data, datapointName)
+        storeDatapoint(args, data, datapointName)
     })
 
 

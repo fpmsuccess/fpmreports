@@ -1,7 +1,7 @@
 const util = require('util')
 
 const { readHierarchySource } = require('./readHierarchySource.js')
-const { saveDatapoint } = require('../../utilities/saveDatapoint.js')
+const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
 const { xformHierarchySource } = require('./xformHierarchySource.js')
 const { xformHierarchySourceFlat } = require('./xformHierarchySourceFlat.js')
 
@@ -20,7 +20,7 @@ function importHierarchy(args) {
         throw err
     }
     try {
-        saveDatapoint(args, rawHierarchySource, args.hierarchyName + 'Raw')
+        storeDatapoint(args, rawHierarchySource, args.hierarchyName + 'Raw')
     } catch (err) {
         throw err
     }
@@ -33,7 +33,7 @@ function importHierarchy(args) {
         throw err
     }
     try {
-        saveDatapoint(args, rawHierarchySource, args.hierarchyName)
+        storeDatapoint(args, rawHierarchySource, args.hierarchyName)
     } catch (err) {
         throw err
     }
@@ -45,7 +45,7 @@ function importHierarchy(args) {
         throw err
     }
     try {
-        saveDatapoint(args, hierarchySourceFlat, args.hierarchyName + 'Flat')
+        storeDatapoint(args, hierarchySourceFlat, args.hierarchyName + 'Flat')
     } catch (err) {
         throw err
     }

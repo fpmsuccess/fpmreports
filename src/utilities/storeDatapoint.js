@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-function saveDatapoint(args, data, datapointName) {
+function storeDatapoint(args, data, datapointName) {
     // console.info('saveDatapointSource()', savePath, saveFile)
 
     // ensure savePath exists
@@ -15,7 +15,7 @@ function saveDatapoint(args, data, datapointName) {
     } else {
         jsonName = args.jsonRoot + datapointName.substr(0, index) + '.json'
     }
-    // console.info('saveDatapoint() jsonName:', jsonName)
+    // console.info('storeDatapoint() jsonName:', jsonName)
     const str = JSON.stringify(data, null, 2)
 
     fs.writeFileSync(jsonName, str, (err) => {
@@ -25,4 +25,4 @@ function saveDatapoint(args, data, datapointName) {
     })
 }
 
-module.exports.saveDatapoint = saveDatapoint
+module.exports.storeDatapoint = storeDatapoint

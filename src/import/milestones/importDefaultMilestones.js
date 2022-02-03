@@ -1,7 +1,7 @@
 const util = require('util')
 
 const { readMilestones } = require('./readMilestones.js')
-const { saveMilestone } = require('./saveMilestone.js')
+const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
 
 // default milestones are located in the hierarchy source spreadsheet 
 //  - TD defaults: located in 'TD Default Milestones' tab
@@ -31,17 +31,16 @@ function importDefaultMilestones(args) {
     ]
 
     tabs.forEach( (tab) => {
-        // read the hierarchy source from the excel files
+        // read the hierarchy source from the excel files and store as datapoint
         try {
             rawMilestone = readMilestones(args, 'Default Milestones', args.fileRoot, args.hierarchySource, tab)
-            // console.info(rawMilestone) 
         } catch (err) {
             throw err
         }
-        // console.info('rawMilestone:', util.inspect(rawMilestone, false, null, true))
         try {
-            let saveFile = tab.split(' ').join('')
-            saveMilestone(rawMilestone, args.jsonRoot, saveFile)
+            // strip out the spaces in the tab name
+            let datapointName = tab.split(' ').join('')
+            storeDatapoint(args, rawMilestone, datapointName)
         } catch (err) {
             throw err
         }
