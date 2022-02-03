@@ -5,6 +5,7 @@ const { version } = require('./package.json')
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
 const { importDefaultMilestones } = require('./src/import/milestones/importDefaultMilestones.js')
 const { importEstimateMilestones } = require('./src/import/milestones/importEstimateMilestones.js')
+const { rollupTDs } = require('./src/compute/rollupTDs/rollupTDs.js')
 
 // WORK
 //  - import default milestones
@@ -49,7 +50,7 @@ function appTopLevel() {
     importEstimateMilestones(args)
 
     // rollup deliverable (TD, ID, PD)
-    // computeTDDelierableRollup(args)
+    rollupTDs(args)
 
     // man-hours to Calendar Days
     // computeManHourstoCalendarDays(args)

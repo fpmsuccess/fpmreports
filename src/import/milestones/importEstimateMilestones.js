@@ -1,7 +1,7 @@
 const fs = require('fs')
 
 const { readEstimateMilestones } = require('./readEstimateMilestones.js')
-const { saveMilestone } = require('./saveMilestone.js')
+const { saveDatapoint } = require('../../utilities/saveDatapoint.js')
 
 function importEstimateMilestones(args) {
     // console.info('\INFO: importEstimateMilestones()')
@@ -19,37 +19,26 @@ function importEstimateMilestones(args) {
     // console.info(hierarchySourceFlat)
 
     // process PD milestone estimates
-    // set the name of the path:file:tab to import
-    // path = hierarchySourceFlat.productInfo['Estimate Root Path']
-    // file = hierarchySourceFlat.productInfo['Estimate File Name']
-    // tab = td['Estimate Tab']
-    // let milestone = []
-    // let name = td['Deliverable ID'] + 'Estimate'
-    // milestone = readMilestones(args, name, path, file, tab)
-    // saveMilestone(milestone, args.jsonRoot, name)
+    //  - TBD
     
     // process ID milestone estimates
     hierarchySourceFlat.idList.forEach( (id) => {
-        // set the name of the path:file:tab to import
-        path = id['Estimate Root Path']
-        file = id['Estimate File Name']
-        tab  = id['Estimate Tab']
-        let milestone = []
-        let name = id['Deliverable ID'] + 'Estimate'
-        milestone = readEstimateMilestones(args, name, path, file, tab)
-        saveMilestone(milestone, args.jsonRoot, name)
+        let data = []
+        let datapointName = id['Deliverable ID'] + 'Estimate'
+        //  - NOTE!: readEstimateMilestones() needs to be checked 
+        //      to ensure applicable for ID estimates
+        data = readEstimateMilestones(args, datapointName, 
+            id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
+        saveDatapoint(args, data, datapointName)
     })
 
     // process TD milestone estimates
     hierarchySourceFlat.tdList.forEach((td) => {
-        // set the name of the path:file:tab to import
-        path = td['Estimate Root Path']
-        file = td['Estimate File Name']
-        tab = td['Estimate Tab']
-        let milestone = []
-        let name = td['Deliverable ID'] + 'Estimate'
-        milestone = readEstimateMilestones(args, name, path, file, tab)
-        saveMilestone(milestone, args.jsonRoot, name)
+        let data = []
+        let datapointName = td['Deliverable ID'] + 'Estimate'
+        data = readEstimateMilestones(args, datapointName,
+            td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
+        saveDatapoint(args, data, datapointName)
     })
 
 
