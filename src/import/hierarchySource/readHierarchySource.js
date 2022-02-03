@@ -2,8 +2,14 @@ const xlsx = require('xlsx')
 
 
 // read a spreadsheet and transform into objects
-function readHierarchySource(filePath, fileName, tab) {
-    // console.error('readHierarchySource() filePath:', filePath, 'fileName:', fileName, 'tab:', tab)
+function readHierarchySource(args, filePath, fileName, tab) {
+    if (args.showInfo) {
+        console.info('\INFO: readHierarchySource() for:', name,
+            '\n\tfileRoot:', fileRoot,
+            '\n\tfileName:', fileName,
+            '\n\ttab:', tab
+        )
+    }
     
     let spreadsheet
     try {
@@ -14,7 +20,6 @@ function readHierarchySource(filePath, fileName, tab) {
     } catch (err) {
         throw 'Error: File: ' + filePath + fileName + ' doesn\'t exist'
     }
-    // console.info(' ... successfully read spreadsheet')
 
     const sheets = spreadsheet.SheetNames
     // console.info('sheet names:', sheets)

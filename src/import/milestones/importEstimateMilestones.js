@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const { readEstimateMilestones } = require('./readEstimateMilestones.js')
+const { readMilestone } = require('./readMilestone.js')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
 
 function importEstimateMilestones(args) {
@@ -25,9 +25,9 @@ function importEstimateMilestones(args) {
     hierarchySourceFlat.idList.forEach( (id) => {
         let data = []
         let datapointName = id['Deliverable ID'] + 'Estimate'
-        //  - NOTE!: readEstimateMilestones() needs to be checked 
+        //  - NOTE!: readMilestones() needs to be checked 
         //      to ensure applicable for ID estimates
-        data = readEstimateMilestones(args, datapointName, 
+        data = readMilestone(args, datapointName, 
             id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
         storeDatapoint(args, data, datapointName)
     })
@@ -36,7 +36,7 @@ function importEstimateMilestones(args) {
     hierarchySourceFlat.tdList.forEach((td) => {
         let data = []
         let datapointName = td['Deliverable ID'] + 'Estimate'
-        data = readEstimateMilestones(args, datapointName,
+        data = readMilestone(args, datapointName,
             td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
         storeDatapoint(args, data, datapointName)
     })

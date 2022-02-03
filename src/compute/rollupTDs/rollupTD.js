@@ -1,8 +1,15 @@
 const fs = require('fs')
-// import chalk from 'chalk'
-// const chalk = require('chalk')
+// const merge = require('lodash.merge')
+const merge = require('deepmerge')
+
+
+const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
+const { storeDatapoint } = require('../../utilities/storeDatapoint')
 
 function rollupTD(args, td) {
+    let estimateMilestones = {}
+    let defaultMilestones = {}
+    let tdMilestones = {}
 
     if (args.showInfo) {
         console.group(td['Full Deliverable Name'])
@@ -10,38 +17,28 @@ function rollupTD(args, td) {
         console.info('estimate source:', td['Estimate File Name'] + ':' + td['Estimate Tab'])
     }
 
-    let dbLocation = ''
-    let defaultName = ''
-    let estName = ''
-    let combined = {}
-
-    // retrieve the default milestones
-    
-    // retrieve the TD Estimate datapoint
-    // determine the TD Estimate datapoint name
-    if (td['Estimate File Name'] === 'TDxxx-StandardCosting-Template.xlsx') {
+    // determine the TD Estimate datapoint name and retrieve it
+    if (td['Estimate File Name'] === args.hierarchySource) {
         // note: this is akin to a 'magic number' as it depends upon knowing which 'Estimate File Name' entries point to a default estimate
         console.error('\tWARNING:', td['Full Deliverable Name'] 
-            + ' does not have its own estimate yet!'
-            + '\n\t\t(it is using default estimate)'
+        + ' does not have its own estimate yet!'
+        + '\n\t\t(it is using default estimate)'
         )
         estName = 'TDDefaultMilestones'
     } else {
         // note: this is akin to a 'magic number' as it depends upon knowing how the json storage file was named
         estName = td['Deliverable ID'] + 'Estimate'
     }
-    dbLocation = args.jsonRoot + estName + '.json'
-    // console.info('dbLocation:', dbLocation)
-    const estEntry = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
-    estimateMilestones = JSON.parse(estEntry)
+
+    // retrieve the TD estimate datapoint
+    estimateMilestones = retrieveDatapoint(args, estName)
+    
+    // retrieve the TD Default Milestones datapoint
+    defaultMilestones = retrieveDatapoint(args, 'TDDefaultMilestones')
 
     // merge the two allowing missing estinate milestones to take default values
-    if (defaultName === estName) {
-        // do the merge here
-        combined = defaultMilestones
-    } else {
-        combined = estimateMilestones
-    }
+    tdMilestones = merge(defaultMilestones, estimateMilestones)
+    storeDatapoint(args, tdMilestones, td['Deliverable ID'] + 'Milestones')
 
     if (args.showInfo) {
         console.groupEnd(td)

@@ -1,14 +1,10 @@
 const fs = require('fs')
+const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
 const { rollupTD } = require('./rollupTD')
 
 function rollupTDs(args) {
 
-    // start with Hierarchy Source
-    dbLocation = args.jsonRoot + args.hierarchyName + 'Flat' + '.json'
-    // console.info('dbLocation:', dbLocation)
-
-    const flatJson = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
-    hierarchySourceFlat = JSON.parse(flatJson)
+    hierarchySourceFlat = retrieveDatapoint(args, args.hierarchyName + 'Flat')
 
     // start with TDs
     const tdList = hierarchySourceFlat.tdList

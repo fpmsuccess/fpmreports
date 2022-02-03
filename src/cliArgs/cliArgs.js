@@ -55,6 +55,9 @@ function cliArgs() {
     if (typeof args.pdDefaultMilestonesTab === 'undefined') {
         args.pdDefaultMilestonesTab = 'PD Default Milestones'
     }
+    if (typeof args.tdDefaulEstimateTab === 'undefined') {
+        args.tdDefaulEstimateTab = 'TDxxx Default Estimate'
+    }
     if (typeof args.jsonRoot === 'undefined') {
         args.jsonRoot = './jsonStorage/'
     }

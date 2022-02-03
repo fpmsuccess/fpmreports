@@ -14,7 +14,7 @@ function importHierarchy(args) {
 
     // read the raw hierarchy source from the excel files and store it as a datapoint
     try {
-        rawHierarchySource = readHierarchySource(args.fileRoot, args.hierarchySource, args.hierarchyTab)
+        rawHierarchySource = readHierarchySource(args, args.fileRoot, args.hierarchySource, args.hierarchyTab)
         // console.info(rawHierarchySource) 
     } catch (err) {
         throw err

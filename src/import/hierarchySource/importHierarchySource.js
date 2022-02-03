@@ -9,7 +9,7 @@ function importHierarchySource(args) {
 
     //  - read the hierarchy source from the excel files
     try {
-        rawHierarchySource = readHierarchySource(args.fileRoot, args.hierarchySource, args.hierarchyTab)
+        rawHierarchySource = readHierarchySource(args, args.fileRoot, args.hierarchySource, args.hierarchyTab)
     } catch (err) {
         throw err
     }
