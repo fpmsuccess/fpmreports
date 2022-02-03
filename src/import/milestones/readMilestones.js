@@ -49,17 +49,25 @@ let data = {
 }
 
 // read a spreadsheet and transform into objects
-function readMilestones(fileRoot, fileName, tab) {
-    console.info('\INFO: readDefaultStdSch() fileRoot:', fileRoot, ' fileName:', fileName, 'tab:', tab)
+function readMilestones(args, name, fileRoot, fileName, tab) {
+    if (args.showInfo) {
+        console.info('\INFO: readMilestones() for:', name, 
+            '\n\tfileRoot:', fileRoot, 
+            '\n\tfileName:', fileName, 
+            '\n\ttab:', tab
+        )
+    }
+    
     const spreadsheet = xlsx.readFile(
         fileRoot + fileName,
         { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
     )
 
     const sheets = spreadsheet.SheetNames
+    // console.info('readMilestones(): sheets:', sheets)
     if (sheets.indexOf(tab) === -1) {
-        console.error('\tERROR: defaultTDScheduleTab: ' + '\'' + tab + '\'', 
-            '\n\t\tnot found in Hierarchy Index :' + '\'' + fileName + '\''
+        console.error('\tERROR: tab: ' + '\'' + tab + '\'', 
+            '\n\t\tnot found in ' + '\'' + fileRoot + fileName + '\''
         )
         // console.log()
         return null

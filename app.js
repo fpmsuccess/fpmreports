@@ -3,7 +3,8 @@ const { version } = require('./package.json')
 
 // import from data sources
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
-const { importMilestones } = require('./src/import/milestones/importMilestones.js')
+const { importDefaultMilestones } = require('./src/import/milestones/importDefaultMilestones.js')
+const { importEstimateMilestones } = require('./src/import/milestones/importEstimateMilestones.js')
 
 // WORK
 //  - import default milestones
@@ -42,10 +43,10 @@ function appTopLevel() {
     // console.info('hierarchySource:', util.inspect(hierarchySource, false, null, true))
 
     // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
-    importMilestones(args)
+    importDefaultMilestones(args)
 
     // import estimate milestones
-    // importEstimateMilestones(args)
+    importEstimateMilestones(args)
 
     // rollup deliverable (TD, ID, PD)
     // computeDelierableRollup(args)

@@ -1,17 +1,14 @@
 const util = require('util')
 
-// import from data sources
 const { readMilestones } = require('./readMilestones.js')
 const { saveMilestone } = require('./saveMilestone.js')
-// const { xformMilestoneSource } = require('./xformMilestoneSource.js')
-// const { xformMilestoneSourceFlat } = require('./xformMilestoneSourceFlat.js')
 
 // default milestones are located in the hierarchy source spreadsheet 
 //  - TD defaults: located in 'TD Default Milestones' tab
 //  - ID defaults: located in 'ID Default Milestones' tab
 //  - PD defaults: located in 'PD Default Milestones' tab
 
-function importMilestones(args) {
+function importDefaultMilestones(args) {
 
     // import Hierarchy Source
     let rawMilestone = []
@@ -36,14 +33,14 @@ function importMilestones(args) {
     tabs.forEach( (tab) => {
         // read the hierarchy source from the excel files
         try {
-            rawMilestone = readMilestones(args.fileRoot, args.hierarchySource, tab)
+            rawMilestone = readMilestones(args, 'Default Milestones', args.fileRoot, args.hierarchySource, tab)
             // console.info(rawMilestone) 
         } catch (err) {
             throw err
         }
         // console.info('rawMilestone:', util.inspect(rawMilestone, false, null, true))
         try {
-            let saveFile = tab.split(' ').join('') + 'Raw'
+            let saveFile = tab.split(' ').join('')
             saveMilestone(rawMilestone, args.jsonRoot, saveFile)
         } catch (err) {
             throw err
@@ -51,4 +48,4 @@ function importMilestones(args) {
     })
 }
 
-module.exports.importMilestones = importMilestones
+module.exports.importDefaultMilestones = importDefaultMilestones

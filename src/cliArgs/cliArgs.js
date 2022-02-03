@@ -59,6 +59,12 @@ function cliArgs() {
         args.jsonRoot = './jsonStorage/'
     }
 
+    // INFO log output
+    if (typeof args.showInfo === 'undefined') {
+        args.showInfo = false
+    } else args.showInfo = true
+
+
     // adjust paths in on Win platform (not Linux)
     if (typeof args.win !== 'undefined') {
         // if on windows fix path separators and file paths
