@@ -11,7 +11,6 @@ function xformHierarchySource(rawHierarchySource) {
         info: {},
         idList: []
     }
-    // let idList = []
     let tdList = []
 
     let currentId = -1
@@ -25,29 +24,38 @@ function xformHierarchySource(rawHierarchySource) {
             case 'PD':
                 rawProduct.info = line
                 break
+
             case 'ID':
+                line['Parent Deliverable'] = 'PD'
                 rawProduct.idList.push(line)
+                // store the accumulated tdList to the appropriate ID
                 if (currentId >= 0) {
-                    // console.info(`update id[$tdList]:`, currentId, tdList.length)
                     rawProduct.idList[currentId].tdList = tdList
                 }
                 currentId++     // this lets us update the id.td list after all collected
                 tdList = []     // reset the tdList for the new ID
                 break
+
             case 'TD':
+                const id = extractID(line['Deliverable Number'])
+                line['Parent Deliverable'] = id
                 tdList.push(line)
                 break
         }
     })
-    // idList[currentId].tdList = tdList        // ensure the last group of TDs are captured back to the ID
-    // rawProduct.idList = idList 
-
-    // display results
-    // console.info('product:', util.inspect(product, false, null, true))
-    // console.info('product:', util.inspect(product, false, 2, true))
-    // console.info('idList', product.idList.length)
 
     return rawProduct
+}
+
+// determine the name of the parent deliverable
+//  - for IDs, it is always PD
+//  - for TDs, it can be determined from 'Deliverable Number' because of ID encoded into TD number
+function extractID(deliverableName) {
+    let index = deliverableName.indexOf('D')
+    let parent = 'ID' + deliverableName.substr(index + 1, 1)
+
+    // console.info('\tdeliverableName:', deliverableName, 'index: ', index, 'parent:', parent)
+    return parent
 }
 
 module.exports.xformHierarchySource = xformHierarchySource

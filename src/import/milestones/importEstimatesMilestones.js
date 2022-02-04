@@ -1,11 +1,12 @@
+const util = require('util')
 const fs = require('fs')
 
 const { readMilestone } = require('./readMilestone.js')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
-const { mergeTdDefaultEstimate } = require('./mergeTdDefaultEstimate.js')
+const { mergeDefaultEstimate } = require('./mergeDefaultEstimate.js')
 
-function importEstimateMilestones(args) {
-    // console.info('\INFO: importEstimateMilestones()')
+function importEstimatesMilestones(args) {
+    // console.info('\INFO: importEstimatesMilestones()')
 
     // open hierarchy source to get index to estimates (by deliverable)
     // import milestones for each extimate
@@ -35,6 +36,24 @@ function importEstimateMilestones(args) {
         //      to ensure applicable for ID estimates
         data = readMilestone(args, datapointName, 
             id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
+
+        // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'
+        data['Deliverable Name'] = id['Deliverable Name']
+        data['Deliverable Number'] = id['Deliverable Number']
+
+        storeDatapoint(args, data, datapointName)
+    })
+
+    // process ID milestones estimate merged with defaults
+    hierarchySourceFlat.idList.forEach((id) => {
+
+        if (args.showInfoX) {
+            console.info('ID milestone merged:', id['Full Deliverable Name'], id['Deliverable Number'])
+        }
+
+        let data = []
+        let datapointName = id['Deliverable Number'] + 'Milestones'
+        data = mergeDefaultEstimate(args, id)
         storeDatapoint(args, data, datapointName)
     })
 
@@ -57,28 +76,40 @@ function importEstimateMilestones(args) {
         data['Deliverable Name'] = td['Deliverable Name']
         data['Deliverable Number'] = td['Deliverable Number']
         // console.info('correct estimate: \n\tdata:', data['Deliverable Name'], ':',  data['Deliverable Number'], '\n\tdeliverable:', td['Deliverable Name'], ':', td['Deliverable Number'])
+
         storeDatapoint(args, data, datapointName)
+        
+        if (args.showTDxxxEstimate) {
+            let target = args.showTDxxxEstimate
+            if (target === td['Deliverable Number']) {
+                // limit display to one TD
+                console.info('TDxxx Estimate:', td['Full Deliverable Name'])
+                console.group()
+                console.info(util.inspect(data, false, null, true))
+                console.groupEnd()
+            } 
+            if (typeof args.showTDxxxEstimate === 'boolean') {
+                // display for all TDs
+                console.info('TDxxx Estimate:', td['Full Deliverable Name'])
+                console.group()
+                console.info(util.inspect(data, false, null, true))
+                console.groupEnd()
+            }
+        }
 
         console.groupEnd()
     })
 
     // process TD milestones estimate merged with defaults
     hierarchySourceFlat.tdList.forEach((td) => {
-
-        if (args.showInfoX) {
-            console.info('process TD milestone merged:', td['Full Deliverable Name'], td['Deliverable Number'])
-        }
-
+        
         let data = []
         let datapointName = td['Deliverable Number'] + 'Milestones'
-        data = mergeTdDefaultEstimate(args, td)
-        // data = readMilestone(args, datapointName,
-        //     td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
+        data = mergeDefaultEstimate(args, td)
+        
         storeDatapoint(args, data, datapointName)
     })
 
-
-
 }
 
-module.exports.importEstimateMilestones = importEstimateMilestones
+module.exports.importEstimatesMilestones = importEstimatesMilestones

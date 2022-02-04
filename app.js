@@ -4,7 +4,7 @@ const { version } = require('./package.json')
 // import from data sources
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
 const { importDefaultMilestones } = require('./src/import/milestones/importDefaultMilestones.js')
-const { importEstimateMilestones } = require('./src/import/milestones/importEstimateMilestones.js')
+const { importEstimatesMilestones } = require('./src/import/milestones/importEstimatesMilestones.js')
 const { rollupTDs } = require('./src/compute/rollupTDs.js')
 
 // WORK
@@ -14,9 +14,10 @@ const { rollupTDs } = require('./src/compute/rollupTDs.js')
 //  - translate manHrs into CalendarDays
 
 // display results to console, capture to text file, export as .csv/.xlsx
-const { displayDeliverables } = require('./src/output/displayDeliverableHierarchy.js')
+// const { displayDeliverables } = require('./src/output/displayDeliverableHierarchy.js')
 const { cliArgs } = require('./src/cliArgs/cliArgs.js')
-const { exit } = require('process')
+const { rollupIDs } = require('./src/compute/rollupIDs')
+// const { exit } = require('process')
 
 appTopLevel()
 
@@ -47,10 +48,11 @@ function appTopLevel() {
     importDefaultMilestones(args)
     
     // // import estimate milestones
-    importEstimateMilestones(args)
+    importEstimatesMilestones(args)
 
     // // rollup deliverable (TD, ID, PD)
     rollupTDs(args)
+    rollupIDs(args)
 
     // // man-hours to Calendar Days
     // // computeManHourstoCalendarDays(args)

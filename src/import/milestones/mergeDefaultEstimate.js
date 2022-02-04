@@ -7,7 +7,7 @@ const merge = require('deepmerge')
 
 const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
 
-function mergeTdDefaultEstimate(args, td) {
+function mergeDefaultEstimate(args, td) {
     let estimateMilestones = {}
     let defaultMilestones = {}
     let tdMilestones = {}
@@ -42,4 +42,4 @@ function mergeTdDefaultEstimate(args, td) {
     return tdMilestones
 }
 
-module.exports.mergeTdDefaultEstimate = mergeTdDefaultEstimate
+module.exports.mergeDefaultEstimate = mergeDefaultEstimate

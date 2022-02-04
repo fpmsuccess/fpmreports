@@ -1,13 +1,12 @@
 const util = require('util')
 const { storeDatapoint } = require('../utilities/storeDatapoint')
 
-function rollupTDMilestones(args, tdMilestones) {
+function rollupIDMilestones(args, tdMilestones) {
     console.group()
     if (args.showInfoX) {
-        console.info('\INFO: rollupTDMilestones()')
+        console.info('\INFO: rollupIDMilestones()')
         console.info('')
     }
-    console.groupEnd()  
 
     // collect deliverable info re: difficulty and recommend skill level
     let difficulty = tdMilestones['Deliverable Difficulty Level']
@@ -46,25 +45,9 @@ function rollupTDMilestones(args, tdMilestones) {
     // // store the datapoint
     // storeDatapoint(args, tdRollup, td['Deliverable Name'] + 'Rollup')
     
-    if (args.showTDxxxMilestoneTotal) {
-        let target = args.showTDxxxMilestoneTotal
-        if (target === td['Deliverable Number']) {
-            // limit display to one TD
-            console.info('TDxxx Estimate:', td['Full Deliverable Name'])
-            console.group()
-            console.info(util.inspect(data, false, null, true))
-            console.groupEnd()
-        }
-        if (typeof args.showTDxxxMilestoneTotal === 'boolean') {
-            // display for all TDs
-            console.info('TDxxx Estimate:', td['Full Deliverable Name'])
-            console.group()
-            console.info(util.inspect(data, false, null, true))
-            console.groupEnd()
-        }
-    }
+    console.groupEnd()  
 
     return tdTotals
 }
 
-module.exports.rollupTDMilestones = rollupTDMilestones
+module.exports.rollupIDMilestones = rollupIDMilestones

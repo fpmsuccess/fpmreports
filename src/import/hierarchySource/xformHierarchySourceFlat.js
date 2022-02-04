@@ -17,10 +17,6 @@ function xformHierarchySourceFlat(rawHierarchySource) {
 
     // walk thru the raw source and build the property and id list
     rawHierarchySourceClone.forEach((line) => {
-        
-        // console.group(line['Full Deliverable Name'] + '(top of forEach()')
-        // console.info(line)
-        // console.groupEnd()
 
         if (line === null)
             return
@@ -28,19 +24,13 @@ function xformHierarchySourceFlat(rawHierarchySource) {
             case 'PD':
                 hierarchySourceFlat.productInfo = line
                 break
-            case 'ID':
-                // console.group(line['Full Deliverable Name'] + ' Type: ID')
-                // console.info(line)
-                // console.groupEnd()
 
+            case 'ID':
                 line['Parent Deliverable'] = 'PD'
                 hierarchySourceFlat.idList.push(line)
                 break
-            case 'TD':
-                // console.group(line['Full Deliverable Name'] + ' Type: TD')
-                // console.info(line)
-                // console.groupEnd()
 
+            case 'TD':
                 const id = extractID(line['Deliverable Number'])
                 line['Parent Deliverable'] = id
                 hierarchySourceFlat.tdList.push(line)
@@ -48,17 +38,12 @@ function xformHierarchySourceFlat(rawHierarchySource) {
         }
     })
 
-    // display results
-    // console.info('hierarchySourceFlat:', util.inspect(hierarchySourceFlat, false, null, true))
-    // console.info('hierarchySourceFlat:', util.inspect(hierarchySourceFlat, false, 2, true))
-    // console.info('idList', hierarchySourceFlat.idList.length)
-
     return hierarchySourceFlat
 }
 
 // determine the name of the parent deliverable
 //  - for IDs, it is always PD
-//  - for TDs, it can be determined from 'Deliverable Number' because of ID encoded into TD ID
+//  - for TDs, it can be determined from 'Deliverable Number' because of ID encoded into TD number
 function extractID(deliverableName) {
     let index = deliverableName.indexOf('D')
     let parent = 'ID' + deliverableName.substr(index+1, 1)

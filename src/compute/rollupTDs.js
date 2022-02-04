@@ -26,13 +26,36 @@ function rollupTDs(args) {
         tdRollup.rollupTotal = rollupTDMilestones(args, tdMilestones)
 
         console.group()
-        if (args.showInfo) {
+        if (args.showInfoX) {
             console.info('tdRollup:', util.inspect(tdRollup, false, 1, true))
         }
         console.groupEnd()
             
         // store the datapoint
         storeDatapoint(args, tdRollup, td['Deliverable Number'] + 'Rollup')
+        
+        // console.info(args.showTDxxxMilestonesTotal, td['Deliverable Number'])
+        // let target = '' + args.showTDxxxMilestonesTotal
+        // let source = '' + td['Deliverable Number']
+        // console.info('target: source:', target, source)
+
+        if (args.showTDxxxMilestonesTotal) {
+            let target = args.showTDxxxMilestonesTotal
+            if (target === td['Deliverable Number']) {
+                // limit display to one TD
+                console.info('TDxxx Milestones Total:', td['Deliverable Number'], td['Deliverable Name'])
+                console.group()
+                console.info(util.inspect(tdRollup, false, null, true))
+                console.groupEnd()
+            }
+            if (typeof args.showTDxxxMilestonesTotal === 'boolean') {
+                // display for all TDs
+                console.info('TDxxx Milestones Total:', td['Deliverable Number'], td['Deliverable Name'])
+                console.group()
+                console.info(util.inspect(tdRollup, false, null, true))
+                console.groupEnd()
+            }
+        }
 
     })
 
