@@ -41,7 +41,7 @@ function xformHierarchySourceFlat(rawHierarchySource) {
                 // console.info(line)
                 // console.groupEnd()
 
-                const id = extractID(line['Deliverable ID'])
+                const id = extractID(line['Deliverable Number'])
                 line['Parent Deliverable'] = id
                 hierarchySourceFlat.tdList.push(line)
                 break
@@ -58,7 +58,7 @@ function xformHierarchySourceFlat(rawHierarchySource) {
 
 // determine the name of the parent deliverable
 //  - for IDs, it is always PD
-//  - for TDs, it can be determined from 'Deliverable ID' because of ID encoded into TD number
+//  - for TDs, it can be determined from 'Deliverable Number' because of ID encoded into TD ID
 function extractID(deliverableName) {
     let index = deliverableName.indexOf('D')
     let parent = 'ID' + deliverableName.substr(index+1, 1)

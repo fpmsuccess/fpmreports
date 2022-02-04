@@ -1,7 +1,9 @@
 const fs = require('fs')
 
 function storeDatapoint(args, data, datapointName) {
-    // console.info('saveDatapointSource()', savePath, saveFile)
+    if (args.showInfoX) {
+        console.info('storeDatapoint:', datapointName)
+    }
 
     // ensure savePath exists
     fs.mkdir(args.jsonRoot, { recursive: true }, (err) => {

@@ -5,7 +5,7 @@ const { version } = require('./package.json')
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
 const { importDefaultMilestones } = require('./src/import/milestones/importDefaultMilestones.js')
 const { importEstimateMilestones } = require('./src/import/milestones/importEstimateMilestones.js')
-const { rollupTDs } = require('./src/compute/rollupTDs/rollupTDs.js')
+const { rollupTDs } = require('./src/compute/rollupTDs.js')
 
 // WORK
 //  - import default milestones

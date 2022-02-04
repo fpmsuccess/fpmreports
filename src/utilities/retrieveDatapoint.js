@@ -3,6 +3,9 @@ const fs = require('fs')
 // const chalk = require('chalk')
 
 function retrieveDatapoint(args, datapointName) {
+    if (args.showInfoX) {
+        console.info('retrieveDatapoint:', datapointName)
+    }
 
     const dbLocation = args.jsonRoot + datapointName + '.json'
     // console.info('dbLocation:', dbLocation)

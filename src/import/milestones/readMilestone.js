@@ -2,7 +2,7 @@ const xlsx = require('xlsx')
 
 // read a spreadsheet and transform into objects
 function readMilestone(args, name, filePath, fileName, tab) {
-    if (args.showInfo) {
+    if (args.showInfoX) {
         console.info('\INFO: readMilestones() for:', name,
             '\n\tfileRoot:', filePath,
             '\n\tfileName:', fileName,
@@ -56,7 +56,7 @@ function readMilestone(args, name, filePath, fileName, tab) {
 
     const keyCols = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
     let headers = {}
-    let data = {}
+    let data = {'milestones':{}}
 
     const deliverableInfoStart = 1
     const deliverableInfoEnd = 6
@@ -124,27 +124,35 @@ function readMilestone(args, name, filePath, fileName, tab) {
         // now parse the milestone info
         // - start at row 9 and go to numRows (end of input)
         if (row >= milestoneInfoStart) {
+
+            // see if an existing milestone collection needs to be stored off
             if (row >= milestoneStart + 6) {
                 // // track which row we are actually on
-                // console.info('Closing milestone group, row:', row)
+                // console.info('\tClosing milestone group, row:', row)
+                // console.info('\t\tmilestoneName:', milestoneName)
+                // console.info('\t\tmilestone:\n', milestone)
+
                 // store off the milestone
                 if (typeof data.milestones === 'undefined') data.milestones = {}
                 data.milestones[milestoneName] = milestone
                 //  reset the state machine variables
                 milestoneStart = 999
-                milestone = {}
                 milestoneName = ''
             }
 
+            // see if a new milestone collection needs to be started
             if (col === 'A' && value !== 'Difficulty') {
                 // // track which row we are actually on
-                // console.info('Starting milestone group, row:', row)
+                // console.info('\tStarting milestone group, row:', row)
+
                 // start of a milestone group
                 milestoneStart = row
                 milestone = JSON.parse(JSON.stringify(milestoneTemplate))
                 milestoneName = value
-
+                // milestone[milestoneName] = {}
             }
+
+            // for new milestone collection, gather easy, medium, and hard values
             if (milestoneStart + 3 === row) {
                 // import difficulty easy
                 if (col === 'C') milestone.easy.sdi.min = value
