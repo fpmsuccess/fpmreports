@@ -43,10 +43,10 @@ function rollupIDxMilestones(args, id) {
     idMilestonesTotal.total = { 'min': minManHrs, 'expected': expectedManHrs, 'max': maxManHrs }
 
     // store the results
-    storeDatapoint(args, idMilestonesTotal, id['Deliverable Number'] + 'MilestonesTotal')
+    storeDatapoint(args, idMilestonesTotal, id['Deliverable Number'] + 'Specific')
 
     // display if cli args indicate to do so
-    displayItem(args, 'showIDxMilestonesTotal', idMilestonesTotal)
+    displayItem(args, 'showIDxSpecific', idMilestonesTotal)
 
     return idMilestonesTotal
 }

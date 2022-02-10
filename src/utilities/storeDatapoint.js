@@ -21,9 +21,11 @@ function storeDatapoint(args, data, datapointName) {
     const str = JSON.stringify(data, null, 2)
 
     fs.writeFileSync(jsonName, str, (err) => {
-        if (err) throw err
-        console.info('ERROR: datapoint:', datapointName, 
-            ' was not successfully stored!')
+        if (err) {
+            console.info('ERROR: datapoint:', datapointName, 
+                ' was not successfully stored!')
+            throw err
+        }
     })
 }
 

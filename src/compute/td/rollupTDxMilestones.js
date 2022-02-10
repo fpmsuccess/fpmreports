@@ -46,10 +46,10 @@ function rollupTDxMilestones(args, td) {
     tdMilestonesTotal.total = { 'min': minManHrs, 'expected': expectedManHrs, 'max': maxManHrs }
     
     // store the results
-    storeDatapoint(args, tdMilestonesTotal, td['Deliverable Number'] + 'MilestonesTotal')
+    storeDatapoint(args, tdMilestonesTotal, td['Deliverable Number'] + 'Specific')
 
     // display if cli args indicate to do so
-    displayItem(args, 'showTDxxxMilestonesTotal', tdMilestonesTotal)
+    displayItem(args, 'showTDxxxSpecific', tdMilestonesTotal)
 }
 
 module.exports.rollupTDxMilestones = rollupTDxMilestones

@@ -7,12 +7,12 @@ const MILESTONEInfoStart = 9
 
 // read a spreadsheet and transform into objects
 function readMilestone(args, type, filePath, fileName, tab) {
-    if (args.showInfoX) {
-            console.info('\tfileRoot:', filePath,
-            '\n\tfileName:', fileName,
-            '\n\ttab:', tab
-        )
-    }
+    // if (args.showInfoX) {
+    //         console.info('\tfileRoot:', filePath,
+    //         '\n\tfileName:', fileName,
+    //         '\n\ttab:', tab
+    //     )
+    // }
 
     let spreadsheet
     try {
@@ -123,22 +123,27 @@ function readMilestone(args, type, filePath, fileName, tab) {
                 if (value === 'Coding - Implementation Time') value = 'Coding'
                 milestoneName = value.split(' ').join(' ')  // bugbug - check this!
 
-                // display output iff 
-                //      (args.showImports is set and typeof showImports === boolean)
-                //   or
-                //      (args.showImports is set and showImports === tab)
-                //   or
-                //      (args.showImports is set and showImports matches data['Deliverable Number']
-                // console.info(typeof args.showImports, args.showImports, tab, data['Deliverable Number'])
-                if (args.showImports 
-                    && (
-                        'boolean' === typeof args.showImports
-                        || type === 'Default' && tab === args.showImports
-                        || type === 'Estimate' && data['Deliverable Number'] === args.showImports
-                    )
-                ){
-                    console.info('Milestone row:', row, milestoneName)
-                }
+                // // display output iff 
+                // //      (args.showImports is set and typeof showImports === boolean)
+                // //   or
+                // //      (args.showImports is set and showImports === tab)
+                // //   or
+                // //      (args.showImports is set and showImports matches data['Deliverable Number']
+                // // console.info(typeof args.showImports, args.showImports, tab, data['Deliverable Number'])
+                // if (args.showImports 
+                //     && (
+                //         'boolean' === typeof args.showImports
+                //         || type === 'Default' && tab === args.showImports
+                //         || type === 'Estimate' && data['Deliverable Number'] === args.showImports
+                //         // NOTE: Correct deliverable name and number aren't set until AFTER readMilestone() so can't use to filter here!
+                //         // NOTE: the following are not selective enough! so DON'T USE THEM!
+                //         // || type === 'Estimate' && data['Estimate File Name'] !== args.hierarchySource
+                //         // || type === 'Estimate' && data['Deliverable Number'] === 'TDxxx'
+                //         // || type === 'Estimate' && data['Deliverable Number'] === 'IDx'
+                //     )
+                // ){
+                //     console.info(milestoneName.padEnd(20,' '), '( row:', row, ')')
+                // }
                 
                 // ensure there is somewhere to store incomming values
                 if (typeof data.milestones[milestoneName] === 'undefined') {

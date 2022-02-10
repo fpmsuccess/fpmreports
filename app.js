@@ -3,15 +3,17 @@ const { version } = require('./package.json')
 
 // import from data sources
 const { cliArgs } = require('./src/cliArgs/cliArgs.js')
-const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
-const { importDefaultMilestones } = require('./src/import/milestones/importDefaultMilestones.js')
-const { importEstimatesMilestones } = require('./src/import/milestones/importEstimatesMilestones.js')
+const { importHierarchy } = require('./src/import/importHierarchy')
+const { computeSpecific } = require('./src/compute/computeSpecific')
+const { computeTotals } = require('./src/compute/computeTotals')
+const { displayDeliverables } = require('./src/display/displayDeliverables')
 
 // calculate drones
-const { mergeEstimatesWDefaults } = require('./src/compute/mergeEstimatesWDefault')
-const { rollupTDs } = require('./src/compute/rollupTDs.js')
-const { rollupIDs } = require('./src/compute/rollupIDs')
-const { displayTDs } = require('./src/output/displayTD/displayTDs')
+// const { tdMergeEstimatesWDefaults } = require('./src/compute/td/tdMergeEstimatesWDefault')
+// const { idMergeEstimatesWDefaults } = require('./src/compute/id/idMergeEstimatesWDefault')
+// const { rollupTDs } = require('./src/compute/td/rollupTDs.js')
+// const { rollupIDs } = require('./src/compute/id/rollupIDs')
+// const { displayTDs } = require('./src/output/displayTD/displayTDs')
 
 appTopLevel()
 
@@ -26,37 +28,32 @@ function appTopLevel() {
     // only show cli args if requested    
     if (args.options) {
         console.info('cli args', typeof args, args)
-        console.info('typeof args.showImports:', typeof args.showImports, args.showImports)
+        // console.info('typeof args.showImports:', typeof args.showImports, args.showImports)
         console.info()
     //     // process.exit(1)
     }
-
-    // import Hierarchy Source 
-    //  - rawHierarchySource: simple import from excel files
-    //  - hierarchySource: as ID obejcts containing TD objects
-    //  - transform raw source into hierarchySource objects (PD, ID, and TD)
-    //  - save hierarchySource to storage (local file system or database)
-    //  - transform raw source into hierarchySourceFlat objects (PD, ID, and TD)
-    //  - hierarchySourceFlat: as flat list of ID and TD objects
-    //  - save hierarchySourceFlat to storage (local file system or database)
-
-    const hierarchySource = importHierarchy(args)
-    // console.info('hierarchySource:', util.inspect(hierarchySource, false, null, true))
-
-    // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
-    importDefaultMilestones(args)
     
-    // import estimate milestones and (where necessary) merge with defaults
-    importEstimatesMilestones(args)
-    mergeEstimatesWDefaults(args)
+    // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
+    importHierarchy(args)
 
-    // rollup deliverable (TD, ID, PD)
-    rollupTDs(args)
-    // rollupIDs(args)
+    // compute deliverable specific (@ [difficulty, skill]) for TDxxx, IDx, PD
+    //  => TDxxxSpecific
+    //  => IDxSpecific
+    //  => PDSpecific
+    computeSpecific(args)
 
-    // display deliverable totals
-    displayTDs(args)
+    // compute deliverable total (TD, ID, PD)
+    //  => TDxxxTotal
+    //  => IDxTotal
+    // //  => PDTotal
+    computeTotals(args)
+        // computeTDxxxTotal(args)
+        // computeIDxTotal(args)
+        // computePDTotal(args)
 
     // // man-hours to Calendar Days
     // // computeManHourstoCalendarDays(args)
+
+    // display deliverable totals
+    displayDeliverables(args)
 }

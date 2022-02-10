@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "--showImports PD",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--showImports=PD"
+            ]
+        },
+        {
             "name": "Launch w/ args",
             "program": "${workspaceFolder}/app.js",
             "request": "launch",

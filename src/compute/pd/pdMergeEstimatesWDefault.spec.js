@@ -1,13 +1,13 @@
 const util = require('util')
 const merge = require('deepmerge')
 
-const { displayItem } = require('../utilities/displayItem')
-const { retrieveDatapoint } = require('../utilities/retrieveDatapoint')
-const { storeDatapoint } = require('../utilities/storeDatapoint.js')
+const { displayItem } = require('../../utilities/displayItem')
+const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
+const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
 
-mergeEstimatesWDefaultsSpec()
+pdMergeEstimatesWDefault.spec.spec()
 
-function mergeEstimatesWDefaultsSpec() {
+function idMergeEstimatesWDefault.spec() {
     jsonDir = process.env.PWD + '/jsonStorage/'
     console.info('jsonDir:', jsonDir)
     let args = {
@@ -56,4 +56,4 @@ function sumRollups(milestonesTotal, tdsTotal) {
     return results
 }
 
-module.exports.mergeEstimatesWDefaultsSpec = mergeEstimatesWDefaultsSpec
+module.exports.pdMergeEstimatesWDefault.spec.spec = pdMergeEstimatesWDefault.spec.spec

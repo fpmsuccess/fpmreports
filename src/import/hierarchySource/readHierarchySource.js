@@ -3,12 +3,12 @@ const xlsx = require('xlsx')
 
 // read a spreadsheet and transform into objects
 function readHierarchySource(args, filePath, fileName, tab) {
-    if (args.showInfoX) {
-        console.info('\INFO: readHierarchySource()\n\tfileRoot:', filePath,
-            '\n\tfileName:', fileName,
-            '\n\ttab:', tab
-        )
-    }
+    // if (args.showInfoX) {
+    //     console.info('\INFO: readHierarchySource()\n\tfileRoot:', filePath,
+    //         '\n\tfileName:', fileName,
+    //         '\n\ttab:', tab
+    //     )
+    // }
     
     let spreadsheet
     try {
