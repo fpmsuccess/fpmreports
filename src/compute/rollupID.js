@@ -1,41 +1,43 @@
 const util = require('util')
-// const fs = require('fs')
+const { displayItem } = require('../utilities/displayItem')
 
 const { retrieveDatapoint } = require('../utilities/retrieveDatapoint')
 const { storeDatapoint } = require('../utilities/storeDatapoint')
-const { rollupIDMilestones } = require('./rollupIDMilestones')
+const { rollupIDxMilestones } = require('./rollupIDxMilestones')
 
-function rollupID(args) {
+function rollupIDs(args) {
 
     hierarchySourceFlat = retrieveDatapoint(args, args.hierarchyName + 'Flat')
+    hierarchySourceFlat.idList.forEach((id) => {
 
-    hierarchySourceFlat.tdList.forEach((id) => {
+        // rollup deliverable milestone totals
 
-        // retrieve the deliverable milestones to rollup
-        idMilestones = retrieveDatapoint(args, id['Deliverable Number'] + 'Milestones')
-        // console.info('idMilestones:', util.inspect(idMilestones, false, 1, true))
+        // rollup IDxMilestonesTotal and IDxTDsTotal
+        let idMilestonesTotal = rollupIDxMilestones(args, id)
+        let idTDsTotal = rollupIDxTDsTotal(args, id)
 
-        let idRollup = {}
-        idRollup['Deliverable Name'] = idMilestones['Deliverable Name']
-        idRollup['Deliverable Number'] = idMilestones['Deliverable Number']
-        idRollup['Deliverable Difficulty Level'] = idMilestones['Deliverable Difficulty Level']
-        idRollup['Recommended Skill Level'] = idMilestones['Recommended Skill Level']
-        idRollup['Person Creating Estimate'] = idMilestones['Person Creating Estimate']
+        // // sum IDxMilestonesTotal and IDxTDsTotal into IDxTotals
+        // let idTotal = {}
+        // idTotal.total = sumRollups(idMilestonesTotal.total, idTDsTotal.total)
 
-        // rollup id milestone totals and store datapoint
-        idRollup.rollupTotal = rollupIDMilestones(args, idMilestones)
 
-        console.group()
-        if (args.showInfoX) {
-            console.info('idRollup:', util.inspect(idRollup, false, 1, true))
-        }
-        console.groupEnd()
 
-        // store the datapoint
-        storeDatapoint(args, idRollup, id['Deliverable Number'] + 'Rollup')
+
 
     })
 
 }
 
-module.exports.rollupID = rollupID
+function sumRollups(milestones, tdsTotal) {
+    let results = {}
+    Object.keys(milestonesTotal).forEach(key => {
+        if (tdsTotal.hasOwnProperty(key)) {
+            results[key] = milestonesTotal[key] + tdsTotal[key]
+        } else {
+            results[key] = milestonesTotal[key]
+        }
+    })
+    return results
+}
+
+module.exports.rollupIDs = rollupIDs

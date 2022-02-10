@@ -2,22 +2,16 @@ const util = require('util')
 const { version } = require('./package.json')
 
 // import from data sources
+const { cliArgs } = require('./src/cliArgs/cliArgs.js')
 const { importHierarchy } = require('./src/import/hierarchySource/importHierarchy.js')
 const { importDefaultMilestones } = require('./src/import/milestones/importDefaultMilestones.js')
 const { importEstimatesMilestones } = require('./src/import/milestones/importEstimatesMilestones.js')
+
+// calculate drones
+const { mergeEstimatesWDefaults } = require('./src/compute/mergeEstimatesWDefault')
 const { rollupTDs } = require('./src/compute/rollupTDs.js')
-
-// WORK
-//  - import default milestones
-//  - import estimate milestones
-//  - rollup deliverable (TD, ID, PD)
-//  - translate manHrs into CalendarDays
-
-// display results to console, capture to text file, export as .csv/.xlsx
-// const { displayDeliverables } = require('./src/output/displayDeliverableHierarchy.js')
-const { cliArgs } = require('./src/cliArgs/cliArgs.js')
 const { rollupIDs } = require('./src/compute/rollupIDs')
-// const { exit } = require('process')
+const { displayTDs } = require('./src/output/displayTD/displayTDs')
 
 appTopLevel()
 
@@ -28,9 +22,14 @@ function appTopLevel() {
 
     // process cli args options
     const args = cliArgs()
-    console.info('cli args', typeof args, args)
 
-    if (args.argsOnly) return
+    // only show cli args if requested    
+    if (args.options) {
+        console.info('cli args', typeof args, args)
+        console.info('typeof args.showImports:', typeof args.showImports, args.showImports)
+        console.info()
+    //     // process.exit(1)
+    }
 
     // import Hierarchy Source 
     //  - rawHierarchySource: simple import from excel files
@@ -47,12 +46,16 @@ function appTopLevel() {
     // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
     importDefaultMilestones(args)
     
-    // // import estimate milestones
+    // import estimate milestones and (where necessary) merge with defaults
     importEstimatesMilestones(args)
+    mergeEstimatesWDefaults(args)
 
-    // // rollup deliverable (TD, ID, PD)
+    // rollup deliverable (TD, ID, PD)
     rollupTDs(args)
-    rollupIDs(args)
+    // rollupIDs(args)
+
+    // display deliverable totals
+    displayTDs(args)
 
     // // man-hours to Calendar Days
     // // computeManHourstoCalendarDays(args)

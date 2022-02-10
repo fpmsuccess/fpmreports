@@ -1,9 +1,11 @@
 const minimist = require('minimist')
 
+const { help } = require('./help.js')
+
 function cliArgs() {
 
     const args = minimist(process.argv.slice(2))
-    // console.info('args:', args)
+    console.info('minimist args:', args)
 
     if (typeof args.help !== 'undefined' 
         || typeof args['h'] !== 'undefined' 
@@ -11,20 +13,11 @@ function cliArgs() {
         || typeof args['--help'] !== 'undefined'
     ) {
         // show help information
-        console.error('Usage: node app.js <command>')
-        console.log('\nwhere <command> is one of:')
-        console.log('\t help, etc.')
-        console.log()
-        console.log('npm <command> -h    quick help on <command>')
-        console.log()
-
+        help()
         process.exit(0)
     }
 
     // source directory, file, tab default options, json store directory
-    if (typeof args.argsOnly === 'undefined') {
-        args.showArgsOnly = true
-    }
     if (typeof args.fileRoot === 'undefined') {
         // args.fileRoot = '../../StdCosting/'
         args.fileRoot = '../../StdCosting/'

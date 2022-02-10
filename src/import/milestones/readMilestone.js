@@ -1,10 +1,14 @@
 const xlsx = require('xlsx')
 
+// state machine constants (relative to milestone input file)
+const DELIVERABLEInfoStart = 1
+const DELIVERABLEInfoEnd = 6
+const MILESTONEInfoStart = 9
+
 // read a spreadsheet and transform into objects
-function readMilestone(args, name, filePath, fileName, tab) {
+function readMilestone(args, type, filePath, fileName, tab) {
     if (args.showInfoX) {
-        console.info('\INFO: readMilestones() for:', name,
-            '\n\tfileRoot:', filePath,
+            console.info('\tfileRoot:', filePath,
             '\n\tfileName:', fileName,
             '\n\ttab:', tab
         )
@@ -57,18 +61,14 @@ function readMilestone(args, name, filePath, fileName, tab) {
     const keyCols = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
     let headers = {}
     let data = {'milestones':{}}
-
-    const deliverableInfoStart = 1
-    const deliverableInfoEnd = 6
-    const milestoneInfoStart = 9
     let milestoneStart = 999
     let milestoneName = ''
-    const milestoneTemplate = {
-        "easy": { "sdi": {}, "sdii": {}, "sdiii": {} },
-        "medium": { "sdi": {}, "sdii": {}, "sdiii": {} },
-        "hard": { "sdi": {}, "sdii": {}, "sdiii": {} }
-    }
-    let milestone = {}
+    // const milestoneTemplate = {
+    //     "easy": { "sdi": 0, "sdii": 0, "sdiii": 0 },
+    //     "medium": { "sdi": 0, "sdii": 0, "sdiii": 0 },
+    //     "hard": { "sdi": 0, "sdii": 0, "sdiii": 0 }
+    // }
+    // let milestone = {}
 
     // import the spreadsheet into objects
     for (colRow in sheetData) {
@@ -88,20 +88,8 @@ function readMilestone(args, name, filePath, fileName, tab) {
         let row = parseInt(colRow.substring(tt))
         let value = sheetData[colRow].v
 
-        // // store all header names
-        // if (row == 1 && value) {
-        //     headers[col] = value
-        //     continue
-        // }
-
-        // // only store out interesting columns
-        // if (keyCols.includes(col)) {
-        //     if (!data[row]) data[row] = {}
-        //     data[row][headers[col]] = value
-        // }
-
         // start with the deliverable information
-        if (row >= deliverableInfoStart && row <= deliverableInfoEnd && col === 'B') {
+        if (row >= DELIVERABLEInfoStart && row <= DELIVERABLEInfoEnd && col === 'B') {
             switch (row) {
                 case 1:
                     data['Deliverable Name'] = value
@@ -123,83 +111,96 @@ function readMilestone(args, name, filePath, fileName, tab) {
 
         // now parse the milestone info
         // - start at row 9 and go to numRows (end of input)
-        if (row >= milestoneInfoStart) {
-
-            // see if an existing milestone collection needs to be stored off
-            if (row >= milestoneStart + 6) {
-                // // track which row we are actually on
-                // console.info('\tClosing milestone group, row:', row)
-                // console.info('\t\tmilestoneName:', milestoneName)
-                // console.info('\t\tmilestone:\n', milestone)
-
-                // store off the milestone
-                if (typeof data.milestones === 'undefined') data.milestones = {}
-                data.milestones[milestoneName] = milestone
-                //  reset the state machine variables
-                milestoneStart = 999
-                milestoneName = ''
-            }
+        if (row >= MILESTONEInfoStart) {
 
             // see if a new milestone collection needs to be started
+            // current exel spreadsheet template has both 'Milestone' and 'dlieverable Difficulty' in col A
             if (col === 'A' && value !== 'Difficulty') {
-                // // track which row we are actually on
-                // console.info('\tStarting milestone group, row:', row)
-
+                
                 // start of a milestone group
+                //  reset state machine variables
                 milestoneStart = row
-                milestone = JSON.parse(JSON.stringify(milestoneTemplate))
-                milestoneName = value
-                // milestone[milestoneName] = {}
+                if (value === 'Coding - Implementation Time') value = 'Coding'
+                milestoneName = value.split(' ').join(' ')  // bugbug - check this!
+
+                // display output iff 
+                //      (args.showImports is set and typeof showImports === boolean)
+                //   or
+                //      (args.showImports is set and showImports === tab)
+                //   or
+                //      (args.showImports is set and showImports matches data['Deliverable Number']
+                // console.info(typeof args.showImports, args.showImports, tab, data['Deliverable Number'])
+                if (args.showImports 
+                    && (
+                        'boolean' === typeof args.showImports
+                        || type === 'Default' && tab === args.showImports
+                        || type === 'Estimate' && data['Deliverable Number'] === args.showImports
+                    )
+                ){
+                    console.info('Milestone row:', row, milestoneName)
+                }
+                
+                // ensure there is somewhere to store incomming values
+                if (typeof data.milestones[milestoneName] === 'undefined') {
+                    // milestone = JSON.parse(JSON.stringify(milestoneTemplate))
+                    data.milestones[milestoneName] = {
+                        "easy": { 
+                            "sdi": {"min":0, "expected":0,"max":0},
+                            "sdii": { "min": 0, "expected": 0, "max": 0 }, 
+                            "sdiii": { "min": 0, "expected": 0, "max": 0 } },
+                        "medium": { 
+                            "sdi": { "min": 0, "expected": 0, "max": 0 }, 
+                            "sdii": { "min": 0, "expected": 0, "max": 0 }, 
+                            "sdiii": { "min": 0, "expected": 0, "max": 0 } },
+                        "hard": { 
+                            "sdi": { "min": 0, "expected": 0, "max": 0 }, 
+                            "sdii": { "min": 0, "expected": 0, "max": 0 }, 
+                            "sdiii": { "min": 0, "expected": 0, "max": 0 } }
+                    }
+                }
             }
 
             // for new milestone collection, gather easy, medium, and hard values
             if (milestoneStart + 3 === row) {
-                // import difficulty easy
-                if (col === 'C') milestone.easy.sdi.min = value
-                if (col === 'D') milestone.easy.sdi.expected = value
-                if (col === 'E') milestone.easy.sdi.max = value
-                if (col === 'F') milestone.easy.sdii.min = value
-                if (col === 'G') milestone.easy.sdii.expected = value
-                if (col === 'H') milestone.easy.sdii.max = value
-                if (col === 'I') milestone.easy.sdiii.min = value
-                if (col === 'J') milestone.easy.sdiii.expected = value
-                if (col === 'K') milestone.easy.sdiii.max = value
+                // import difficulty === easy
+                if (col === 'C') data.milestones[milestoneName].easy.sdi.min = value
+                if (col === 'D') data.milestones[milestoneName].easy.sdi.expected = value
+                if (col === 'E') data.milestones[milestoneName].easy.sdi.max = value
+                if (col === 'F') data.milestones[milestoneName].easy.sdii.min = value
+                if (col === 'G') data.milestones[milestoneName].easy.sdii.expected = value
+                if (col === 'H') data.milestones[milestoneName].easy.sdii.max = value
+                if (col === 'I') data.milestones[milestoneName].easy.sdiii.min = value
+                if (col === 'J') data.milestones[milestoneName].easy.sdiii.expected = value
+                if (col === 'K') data.milestones[milestoneName].easy.sdiii.max = value
             }
             else if (milestoneStart + 4 === row) {
-                // import difficulty medium
-                if (col === 'C') milestone.medium.sdi.min = value
-                if (col === 'D') milestone.medium.sdi.expected = value
-                if (col === 'E') milestone.medium.sdi.max = value
-                if (col === 'F') milestone.medium.sdii.min = value
-                if (col === 'G') milestone.medium.sdii.expected = value
-                if (col === 'H') milestone.medium.sdii.max = value
-                if (col === 'I') milestone.medium.sdiii.min = value
-                if (col === 'J') milestone.medium.sdiii.expected = value
-                if (col === 'K') milestone.medium.sdiii.max = value
+                // import difficulty === medium
+                if (col === 'C') data.milestones[milestoneName].medium.sdi.min = value
+                if (col === 'D') data.milestones[milestoneName].medium.sdi.expected = value
+                if (col === 'E') data.milestones[milestoneName].medium.sdi.max = value
+                if (col === 'F') data.milestones[milestoneName].medium.sdii.min = value
+                if (col === 'G') data.milestones[milestoneName].medium.sdii.expected = value
+                if (col === 'H') data.milestones[milestoneName].medium.sdii.max = value
+                if (col === 'I') data.milestones[milestoneName].medium.sdiii.min = value
+                if (col === 'J') data.milestones[milestoneName].medium.sdiii.expected = value
+                if (col === 'K') data.milestones[milestoneName].medium.sdiii.max = value
             }
             else if (milestoneStart + 5 === row) {
-                // import difficulty hard
-                if (col === 'C') milestone.hard.sdi.min = value
-                if (col === 'D') milestone.hard.sdi.expected = value
-                if (col === 'E') milestone.hard.sdi.max = value
-                if (col === 'F') milestone.hard.sdii.min = value
-                if (col === 'G') milestone.hard.sdii.expected = value
-                if (col === 'H') milestone.hard.sdii.max = value
-                if (col === 'I') milestone.hard.sdiii.min = value
-                if (col === 'J') milestone.hard.sdiii.expected = value
-                if (col === 'K') milestone.hard.sdiii.max = value
+                // import difficulty === hard
+                if (col === 'C') data.milestones[milestoneName].hard.sdi.min = value
+                if (col === 'D') data.milestones[milestoneName].hard.sdi.expected = value
+                if (col === 'E') data.milestones[milestoneName].hard.sdi.max = value
+                if (col === 'F') data.milestones[milestoneName].hard.sdii.min = value
+                if (col === 'G') data.milestones[milestoneName].hard.sdii.expected = value
+                if (col === 'H') data.milestones[milestoneName].hard.sdii.max = value
+                if (col === 'I') data.milestones[milestoneName].hard.sdiii.min = value
+                if (col === 'J') data.milestones[milestoneName].hard.sdiii.expected = value
+                if (col === 'K') data.milestones[milestoneName].hard.sdiii.max = value
             }
         }
 
     }
 
-    // convert any milestones === 'Coding - Implementation Time' into 'Coding'
-    if (typeof data.milestones['Coding - Implementation Time'] !== 'undefined') {
-        data.milestones['Coding'] = data.milestones['Coding - Implementation Time']
-        delete data.milestones['Coding - Implementation Time']
-    }
-
-    // console.error('data:', data)
     return data
 
 }

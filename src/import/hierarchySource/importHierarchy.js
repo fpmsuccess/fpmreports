@@ -1,4 +1,3 @@
-const util = require('util')
 
 const { readHierarchySource } = require('./readHierarchySource.js')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
