@@ -1,8 +1,7 @@
-const fs = require('fs')
 const merge = require('deepmerge')
 
-const { displayItem } = require('../../utilities/displayItem')
 const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
+const { displayItem } = require('../../utilities/displayItem')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
 
 function idMergeEstimatesWDefault(args) {
@@ -13,9 +12,7 @@ function idMergeEstimatesWDefault(args) {
     let milestones = {}
 
     // open hierarchy source to get index to estimates (by deliverable)
-    const dbLocation = args.jsonRoot + args.hierarchyName + 'Flat' + '.json'
-    const flatJson = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
-    const hierarchySourceFlat = JSON.parse(flatJson)
+    hierarchySourceFlat = retrieveDatapoint(args, args.hierarchyName + 'Flat')
 
     // process ID milestones estimate merged with defaults
     hierarchySourceFlat.idList.forEach((id) => {

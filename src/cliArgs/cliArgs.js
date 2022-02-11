@@ -5,7 +5,7 @@ const { help } = require('./help.js')
 function cliArgs() {
 
     const args = minimist(process.argv.slice(2))
-    console.info('minimist args:', args)
+    // console.info('minimist args:', args)
 
     if (typeof args.help !== 'undefined' 
         || typeof args['h'] !== 'undefined' 

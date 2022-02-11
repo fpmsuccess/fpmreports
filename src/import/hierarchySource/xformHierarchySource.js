@@ -1,13 +1,19 @@
 const xlsx = require('xlsx')
 const util = require('util')
 
+const { storeDatapoint } = require('../../utilities/storeDatapoint')
+const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
+
 // transform Hierarchy Index  objects into a hierarchy
-function xformHierarchySource(rawHierarchySource) {
+function xformHierarchySource(args) {
 
-    // create new obj to prevent impact on original
-    const rawHierarchySourceClone = JSON.parse(JSON.stringify(rawHierarchySource))
+    // retrieve the deliverable milestones to rollup
+    const source = retrieveDatapoint(args, args.hierarchyName + 'Raw')
 
-    let rawProduct = {
+    // // create new obj to prevent impact on original
+    // const rawHierarchySourceClone = JSON.parse(JSON.stringify(rawHierarchySource))
+
+    let project = { 
         info: {},
         idList: []
     }
@@ -16,35 +22,39 @@ function xformHierarchySource(rawHierarchySource) {
     let currentId = -1
 
     // walk thru the raw source and build the property and id list
-    rawHierarchySourceClone.forEach((line) => {
+    source.forEach((line) => {
         // console.info(line.Index, line.Type, ', ', line['Full Deliverable Name'], ', ', line.Predecessor)
         if (line === null)
             return
         switch (line.Type) {
             case 'PD':
-                rawProduct.info = line
+                project.info = line 
                 break
 
             case 'ID':
                 line['Parent Deliverable'] = 'PD'
-                rawProduct.idList.push(line)
-                // store the accumulated tdList to the appropriate ID
-                if (currentId >= 0) {
-                    rawProduct.idList[currentId].tdList = tdList
-                }
-                currentId++     // this lets us update the id.td list after all collected
-                tdList = []     // reset the tdList for the new ID
+                line.tdList = []     // create a new tdList for the new ID
+                currentId++     // keep track of the current ID index for storing TDs
+                project.idList.push(line)
                 break
 
             case 'TD':
                 const id = extractID(line['Deliverable Number'])
                 line['Parent Deliverable'] = id
-                tdList.push(line)
+                // store the accumulated tdList to the appropriate ID
+                if (currentId >= 0) {
+                    project.idList[currentId].tdList.push(line)
+                } else {
+                    throw 'ERROR: Hierarchy Index TD: ' + line['Deliverable Number'] + ' created before Parent ID:' + id
+                }
                 break
         }
     })
 
-    return rawProduct
+    // save as datapoint
+    storeDatapoint(args, project, args.hierarchyName)
+
+    return project
 }
 
 // determine the name of the parent deliverable

@@ -8,7 +8,7 @@ function displayTDs(args) {
 
         // Display TD milestones 
         tdMilestones = retrieveDatapoint(args, td['Deliverable Number'] + 'Milestones')
-        tdMilestonesTotal = retrieveDatapoint(args, td['Deliverable Number'] + 'Specific')
+        tdMilestonesTotal = retrieveDatapoint(args, td['Deliverable Number'] + SpecificTotal)
         tdDisplay(args, tdMilestonesTotal, tdMilestones)
     })
 }

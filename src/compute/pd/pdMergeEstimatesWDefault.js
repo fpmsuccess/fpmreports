@@ -1,4 +1,3 @@
-const fs = require('fs')
 const merge = require('deepmerge')
 
 const { displayItem } = require('../../utilities/displayItem')
@@ -11,11 +10,9 @@ function pdMergeEstimatesWDefault(args) {
     let estimateMilestones = {}
     let defaultMilestones = {}
     let milestones = {}
-    
+
     // open hierarchy source to get index to estimates (by deliverable)
-    const dbLocation = args.jsonRoot + args.hierarchyName + 'Flat' + '.json'
-    const flatJson = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
-    const hierarchySourceFlat = JSON.parse(flatJson)
+    hierarchySourceFlat = retrieveDatapoint(args, args.hierarchyName + 'Flat')
     const pd = hierarchySourceFlat.productInfo
 
     // process PD milestones estimate merged with defaults

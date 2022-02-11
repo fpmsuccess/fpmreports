@@ -1,8 +1,9 @@
 
 const { readHierarchySource } = require('./readHierarchySource.js')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
+
 const { xformHierarchySource } = require('./xformHierarchySource.js')
-const { xformHierarchySourceFlat } = require('./xformHierarchySourceFlat.js')
+const { xformHierarchySourceFlat } = require('../hierarchySource/xformHierarchySourceFlat')
 
 function importHierarchySource(args) {
 
@@ -19,23 +20,21 @@ function importHierarchySource(args) {
         throw err
     }
 
-    // transform the excel info into Hierarchy Source object and save it as a datapoint
+    // transform the excel info into Project object and save it as a datapoint
     try {
-        hierarchySource = xformHierarchySource(rawHierarchySource)
-        storeDatapoint(args, rawHierarchySource, args.hierarchyName)
+        xformHierarchySource(args, args.rawHierarchySource)
     } catch (err) {
         throw err
     }
 
-    // transform the excel info into flat Hierarchy Source object and save it to JSON
+    // transform the excel info into ProjectFlat object and save it as a datapoint
     try {
-        hierarchySourceFlat = xformHierarchySourceFlat(rawHierarchySource)   
-        storeDatapoint(args, hierarchySourceFlat, args.hierarchyName + 'Flat')
+        xformHierarchySourceFlat(args, args.rawHierarchySource)
     } catch (err) {
         throw err
     }
 
-    return hierarchySource
+    // return hierarchySource
 }
 
 module.exports.importHierarchySource = importHierarchySource

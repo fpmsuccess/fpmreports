@@ -1,44 +1,47 @@
 const xlsx = require('xlsx')
 const util = require('util')
+const { storeDatapoint } = require('../../utilities/storeDatapoint')
+const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
 
 // transform Hierarchy Index  objects into a hierarchy
-function xformHierarchySourceFlat(rawHierarchySource) {
+function xformHierarchySourceFlat(args) {
 
-    // create new obj to prevent impact on original
-    const rawHierarchySourceClone = JSON.parse(JSON.stringify(rawHierarchySource))
+    // retrieve the deliverable milestones to rollup
+    const source = retrieveDatapoint(args, args.hierarchyName + 'Raw')
 
-    let hierarchySourceFlat = {
+    let projectFlat = {
         'productInfo': {},
         'idList': [],
         'tdList': []
     }
 
-    let currentId = -1
-
     // walk thru the raw source and build the property and id list
-    rawHierarchySourceClone.forEach((line) => {
+    source.forEach((line) => {
 
         if (line === null)
             return
         switch (line.Type) {
             case 'PD':
-                hierarchySourceFlat.productInfo = line
+                projectFlat.productInfo = line
                 break
 
             case 'ID':
                 line['Parent Deliverable'] = 'PD'
-                hierarchySourceFlat.idList.push(line)
+                projectFlat.idList.push(line)
                 break
 
             case 'TD':
                 const id = extractID(line['Deliverable Number'])
                 line['Parent Deliverable'] = id
-                hierarchySourceFlat.tdList.push(line)
+                projectFlat.tdList.push(line)
                 break
         }
     })
 
-    return hierarchySourceFlat
+    // save as datapoint
+    storeDatapoint(args, projectFlat, args.hierarchyName + 'Flat')
+
+    // return projectFlat
 }
 
 // determine the name of the parent deliverable

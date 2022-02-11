@@ -29,7 +29,7 @@ function rollupIDxTDsTotal(args, id) {
     tdList.forEach((td) => {
 
         // retrieve the TDxxxSpecific datapoint
-        const datapoint = td['Deliverable Number'] + 'Specific'
+        const datapoint = td['Deliverable Number'] + SpecificTotal
         const tdMilestonesTotal = retrieveDatapoint(args, datapoint)
         
         // // add TD Milestones Total to ID total
