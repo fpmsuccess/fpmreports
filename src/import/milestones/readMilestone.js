@@ -16,7 +16,7 @@ function readMilestone(args, type, filePath, fileName, tab) {
 
     let spreadsheet
     try {
-        console.error('filePath\\fileName: in: ' + '\'' + filePath + fileName + '\'')
+        // console.error('filePath\\fileName: in: ' + '\'' + filePath + fileName + '\'')
         spreadsheet = xlsx.readFile(
             filePath + fileName,
             { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
