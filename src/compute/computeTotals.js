@@ -19,7 +19,7 @@ function computeTotals(args) {
 
     // sumTDxxxForId() and sumIDxForPd() need project hierarchy NOT projectFlat hierarchy!
     hierarchySource = retrieveDatapoint(args, args.hierarchyName)
-
+    
     // compute IDx specific milestones
     //  - IDxTotal = IDxSpecificTotal + Σ[TDxxxTotal]
     console.info('\n... IDx Total = IDxSpecificTotal + Σ[TDxxxTotal')

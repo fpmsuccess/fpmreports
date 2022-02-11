@@ -27,7 +27,6 @@ function addupIDxMilestones(args, id) {
 
     // process each milestone
     Object.entries(idMilestones.milestones).forEach((milestone) => {
-
         // NOTE: need the milestone[1] offset because of how Object.entries converts the object
         typeof milestone[1][difficulty][skill]['min'] !== 'undefined'
             ? minManHrs += milestone[1][difficulty][skill]['min'] : ''
@@ -37,7 +36,6 @@ function addupIDxMilestones(args, id) {
             ? maxManHrs += milestone[1][difficulty][skill]['max'] : ''
 
         milestones++
-            
     })
 
     // capture the results

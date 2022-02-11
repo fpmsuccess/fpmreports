@@ -13,9 +13,44 @@
             ],
             "type": "pwa-node",
             "args": [
-                "--fileRoot=../StdCosting/",
+                "--fileRoot ../StdCosting/",
                 "--defaultTDScheduleTab=ZeroTDSchedule",
                 "--showImports=PD"
+            ]
+        },
+        {
+            "name": "--display --showTotals TD101",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--options",
+                "--display",
+                "--showTotals=TD101"
+            ]
+        },
+        {
+            "name": "--display --showTotals ID1",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--options",
+                "--import",
+                "--compute",
+                "--display",
+                "--showTotals=ID1",
+                "--hierarchyTab=Hierarchy Zero"
             ]
         },
         {

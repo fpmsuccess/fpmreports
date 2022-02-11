@@ -16,24 +16,24 @@ function readMilestone(args, type, filePath, fileName, tab) {
 
     let spreadsheet
     try {
+        console.error('filePath\\fileName: in: ' + '\'' + filePath + fileName + '\'')
         spreadsheet = xlsx.readFile(
             filePath + fileName,
             { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
         )
     } catch (err) {
+        console.error('filePath\\fileName: \'' + filePath + fileName + '\'')
         throw 'Error: File: ' + filePath + fileName + ' doesn\'t exist'
     }
 
     const sheets = spreadsheet.SheetNames
     if (sheets.indexOf(tab) === -1) {
-        console.error('\tERROR: tab: ' + '\'' + tab + '\'',
-            '\n\t\tnot found in ' + '\'' + filePath + fileName + '\''
-        )
-        // console.log()
-        return null
+        console.error('existing tabs:', sheets, ' in: ' + '\'' + filePath + fileName + '\'')
+        throw 'ERROR: tab: ' + tab + '\'' + ' not found in ' + '\'' + filePath + fileName + '\'' 
     }
     const sheetData = spreadsheet.Sheets[tab]
     if (typeof sheetData === 'undefined') {
+        console.error('existing tabs:', sheets, ' in: ', filePath, fileName)
         throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
     }
 
@@ -121,7 +121,7 @@ function readMilestone(args, type, filePath, fileName, tab) {
                 //  reset state machine variables
                 milestoneStart = row
                 if (value === 'Coding - Implementation Time') value = 'Coding'
-                milestoneName = value.split(' ').join(' ')  // bugbug - check this!
+                milestoneName = value
 
                 // // display output iff 
                 // //      (args.showImports is set and typeof showImports === boolean)
@@ -147,7 +147,6 @@ function readMilestone(args, type, filePath, fileName, tab) {
                 
                 // ensure there is somewhere to store incomming values
                 if (typeof data.milestones[milestoneName] === 'undefined') {
-                    // milestone = JSON.parse(JSON.stringify(milestoneTemplate))
                     data.milestones[milestoneName] = {
                         "easy": { 
                             "sdi": {"min":0, "expected":0,"max":0},

@@ -11,7 +11,7 @@ function computeSpecificRollup(args) {
 
     // compute TDxxx Total
     //  - TDxxxSpecificTotal + null => TDxxxTotal 
-    console.info('\n... TDxxx Total (@ [difficulty, skill]) milestones')
+    console.info('\n... TDxxx Specific Total (@ [difficulty, skill]) milestones')
     console.group()
     hierarchySourceFlat.tdList.forEach((deliverable) => {
         console.info(deliverable['Deliverable Number'], '-', deliverable['Deliverable Name'])
@@ -21,7 +21,7 @@ function computeSpecificRollup(args) {
 
     // compute TDxxx Total
     //  - IDxSpecificTotal + IDxTDsRollup => IDxTotal
-    console.info('\n... IDx Total (@ [difficulty, skill]) milestones')
+    console.info('\n... IDx Specific Total (@ [difficulty, skill]) milestones')
     console.group()
     hierarchySourceFlat.idList.forEach((deliverable) => {
         console.info(deliverable['Deliverable Number'], '-', deliverable['Deliverable Name'])
@@ -31,7 +31,7 @@ function computeSpecificRollup(args) {
 
     // compute PD Total
     //  - PDSpecificTotal + PDIDsRollup => PDTotal
-    console.info('\n... PD Total (@ [difficulty, skill]) milestones')
+    console.info('\n... PD Specific Total (@ [difficulty, skill]) milestones')
     console.group()
     {
         deliverable = hierarchySourceFlat.productInfo

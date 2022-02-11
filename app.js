@@ -14,6 +14,7 @@ function appTopLevel() {
 
     // show app version
     console.log('\nfpmRollup:\tversion:', version)
+    console.log()
 
     console.group()
     
@@ -26,29 +27,39 @@ function appTopLevel() {
         console.info()
     }
     
-    // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
-    console.info('\nimport Project Hierarchy:', args.hierarchySource)
-    console.group()
-        importHierarchy(args)
-    console.groupEnd()
-    
-    // compute deliverable specific (@ [difficulty, skill]) for TDxxx, IDx, PD
-    console.info('\ncompute Deliverable Specific milestones')
-    console.group()
-        computeSpecificRollup(args)
-    console.groupEnd()
+    if (args.import || args.all) {
+        // import default milestones (PD, ID, TD) and associate with specific PD, ID, or TD
+        console.info('\nimport Project Hierarchy:', args.hierarchySource)
+        console.group()
+            importHierarchy(args)
+        console.groupEnd()
+    }
 
-    // compute deliverable total (TD, ID, PD)
-    console.info('\ncompute Deliverable Totals')
-    console.group()
-        computeTotals(args)
-    console.groupEnd()
+    if (args.compute || args.all) {
+        // compute deliverable specific (@ [difficulty, skill]) for TDxxx, IDx, PD
+        console.info('\ncompute Deliverable Specific milestones')
+        console.group()
+            computeSpecificRollup(args)
+        console.groupEnd()
+
+        // compute deliverable total (TD, ID, PD)
+        console.info('\ncompute Deliverable Totals')
+        console.group()
+            computeTotals(args)
+        console.groupEnd()
+    }
+    console.log()
 
     // // man-hours to Calendar Days
     // // computeManHourstoCalendarDays(args)
 
-    // display deliverable totals
-    displayDeliverables(args)
+    if (args.display || args.all) {
+        // display deliverable totals
+        console.info('display Report\n')
+        console.group()
+            displayDeliverables(args)
+        console.groupEnd()
+    }
 
     console.groupEnd()
 }

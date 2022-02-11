@@ -13,8 +13,8 @@ function calculateTdScheduleTotal(td) {
     let maxManHrs = 0
 
     // process each milestone
-    let milestones = ['Design', "Design Review", "Coding", "Code Review", "Unit Test", "Document", "Final Review Prep", "Final Review", 'Merge To Develop']
-    milestones.forEach((milestone) => {
+    Object.entries(td.milestones).forEach((mstone) => {
+        milestone = mstone[1]
         typeof td['TD Schedule'][milestone][difficulty][skill]['min'] !== 'undefined'
             ? minManHrs += td['TD Schedule'][milestone][difficulty][skill]['min'] : ''
         typeof td['TD Schedule'][milestone][difficulty][skill]['expected'] !== 'undefined'
@@ -22,19 +22,13 @@ function calculateTdScheduleTotal(td) {
         typeof td['TD Schedule'][milestone][difficulty][skill]['max'] !== 'undefined'
             ? maxManHrs += td['TD Schedule'][milestone][difficulty][skill]['max'] : ''
     })
-    // console.info(td['Full Deliverable Name'], 'difficulty: ', difficulty, 'skill: ', skill, 'minManHrs:', minManHrs, 'expectedManHrs:', expectedManHrs, 'maxManHrs:', maxManHrs)
     
     // store the results
     tdTotals = {'min': 0, 'expected': 0, 'max': 0}
     tdTotals.min = minManHrs
     tdTotals.expected = expectedManHrs
     tdTotals.max = maxManHrs
-    // console.info(tdTotals)
-
-    // console.info('tdTotals:', util.inspect(tdTotals, false, 2, true))
-    // console.groupEnd(td['Full Deliverable Name'])
-
-    // return {}
+    
     return tdTotals
 }
 

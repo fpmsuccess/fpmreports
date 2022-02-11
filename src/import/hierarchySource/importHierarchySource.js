@@ -9,14 +9,13 @@ function importHierarchySource(args) {
 
     // import Hierarchy Source
     let rawHierarchySource = []
-    let hierarchySource = {}
-    let hierarchySourceFlat = {}
 
     // read the raw hierarchy source from the excel files and store it as a datapoint
     try {
         rawHierarchySource = readHierarchySource(args, args.fileRoot, args.hierarchySource, args.hierarchyTab)
         storeDatapoint(args, rawHierarchySource, args.hierarchyName + 'Raw')
     } catch (err) {
+        console.info('args.fileRoot:', args.fileRoot, 'args.hierarchySource:', args.hierarchySource, 'args.hierarchyTab:', args.hierarchyTab)
         throw err
     }
 

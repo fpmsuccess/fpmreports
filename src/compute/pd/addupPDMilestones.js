@@ -6,7 +6,6 @@ function addupPDMilestones(args, pd) {
 
     // retrieve the deliverable milestones to rollup
     const pdMilestones = retrieveDatapoint(args, pd['Deliverable Number'] + 'Milestones')
-    // console.info('pdMilestones:', util.inspect(pdMilestones, false, 1, true))
 
     let pdMilestonesTotal = {}
     pdMilestonesTotal['Deliverable Name'] = pdMilestones['Deliverable Name']
@@ -28,7 +27,6 @@ function addupPDMilestones(args, pd) {
 
     // process each milestone
     Object.entries(pdMilestones.milestones).forEach((milestone) => {
-
         // NOTE: need the milestone[1] offset because of how Object.entries converts the object
         typeof milestone[1][difficulty][skill]['min'] !== 'undefined'
             ? minManHrs += milestone[1][difficulty][skill]['min'] : ''
@@ -38,11 +36,11 @@ function addupPDMilestones(args, pd) {
             ? maxManHrs += milestone[1][difficulty][skill]['max'] : ''
 
         milestones++
-            
     })
 
     // capture the results
     pdMilestonesTotal.milestoneCount = milestones
+    // pdMilestonesTotal.tdDefaultMilestones = tdDefaultMilestones  //bugbug - figure out a way to total default milestones!
     pdMilestonesTotal.total = { 'min': minManHrs, 'expected': expectedManHrs, 'max': maxManHrs }
     
     // store the results

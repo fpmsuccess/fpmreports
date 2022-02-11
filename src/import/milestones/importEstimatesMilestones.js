@@ -14,7 +14,12 @@ function importEstimatesMilestones(args) {
 
         let data = []
 
-        data = readMilestone(args, 'Estimate', td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
+        try {
+            data = readMilestone(args, 'Estimate', td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
+        } catch (err) {
+            console.error(err)
+            return
+        }
         
         // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'
         data['Deliverable Name'] = td['Deliverable Name']
@@ -34,7 +39,11 @@ function importEstimatesMilestones(args) {
 
         let data = []
 
-        data = readMilestone(args, 'Estimate', id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
+        try {
+            data = readMilestone(args, 'Estimate', id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
+        } catch (err) {
+            throw err
+        }
 
         // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'
         data['Deliverable Name'] = id['Deliverable Name']
@@ -57,7 +66,11 @@ function importEstimatesMilestones(args) {
 
         //  - NOTE!: readMilestones() needs to be checked 
         //      to ensure applicable for pd estimates
-        data = readMilestone(args, 'Estimate', pd['Estimate Root Path'], pd['Estimate File Name'], pd['Estimate Tab'])
+        try {
+            data = readMilestone(args, 'Estimate', pd['Estimate Root Path'], pd['Estimate File Name'], pd['Estimate Tab'])
+        } catch (err) {
+            throw err
+        }
 
         // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'
         data['Deliverable Name'] = pd['Deliverable Name']
