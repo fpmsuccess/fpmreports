@@ -1,0 +1,95 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "--showImports PD",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot ../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--showImports=PD"
+            ]
+        },
+        {
+            "name": "--display --showTotals TD101",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--options",
+                "--display",
+                "--showTotals=TD101"
+            ]
+        },
+        {
+            "name": "--display --showTotals ID1",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--options",
+                "--import",
+                "--compute",
+                "--display",
+                "--showTotals=ID1",
+                "--hierarchyTab=Hierarchy Zero"
+            ]
+        },
+        {
+            "name": "Launch w/ args",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/",
+                "--defaultTDScheduleTab=ZeroTDSchedule",
+                "--showLevel=id",
+                "--show=deliverables",
+                "--show=onlyActiveIDs",
+                "--show=onlyActiveTDs",
+            ]
+        },
+        {
+            "name": "Launch w/ importHierarchy",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "--fileRoot=../StdCosting/"
+            ]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/app.js"
+        }
+    ]
+}

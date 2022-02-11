@@ -2,14 +2,14 @@
 
 # CLI Options
 node app.js <options>
-    --fileRoot 'absolute or relative path to the directory containing the Schedule Index'
+    --fileRoot 'absolute or relative path to the directory containing the Hierarchy Index'
         default: './' (current directory)
 
-    --indexSource 'file name of the file containing the Schedule Index'
+    --hierarchySource 'file name of the file containing the Hierarchy Index'
         default: 'elbert - std costing.xlsx'
 
-    --indexTab 'tab name of the tab containing the Schedule Index'
-        default: 'Schedule Index'
+    --hierarchyTab 'tab name of the tab containing the Hierarchy Index'
+        default: 'Hierarchy Index'
 
     --defaultTDScheduleTab 'tab name of the tab containing the Default TD Schedule'
         default: 'Default TD Schedule'

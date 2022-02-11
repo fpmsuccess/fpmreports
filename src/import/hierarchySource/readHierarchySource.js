@@ -1,19 +1,32 @@
 const xlsx = require('xlsx')
 
-// read a spreadsheet and transform into objects
-function readScheduleIndex(fileName, tab) {
-    // console.error('readMasterFileOutline() fileName:', fileName, 'tab:', tab)
-    const spreadsheet = xlsx.readFile(
-        fileName,
-        { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
-    )
 
+// read a spreadsheet and transform into objects
+function readHierarchySource(args, filePath, fileName, tab) {
+    // if (args.showInfoX) {
+    //     console.info('\INFO: readHierarchySource()\n\tfileRoot:', filePath,
+    //         '\n\tfileName:', fileName,
+    //         '\n\ttab:', tab
+    //     )
+    // }
+    
+    let spreadsheet
+    try {
+        spreadsheet = xlsx.readFile(
+            filePath + fileName,
+            { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
+        )
+    } catch (err) {
+        throw 'Error: File: ' + filePath + fileName + ' doesn\'t exist'
+    }
+    
     const sheets = spreadsheet.SheetNames
-    // console.error('sheet names:', sheets)
-    const sheetName = sheets[0]
-    // const sheetData = spreadsheet.Sheets[sheetName]
+    // console.info('sheet names:', sheets, tab)
     const sheetData = spreadsheet.Sheets[tab]
-    // console.error('sheetName:sheetData: %s', sheetName, JSON.stringify(sheetData))
+    if (typeof sheetData === 'undefined') {
+        console.error('existing tabs:', sheets, ' in: ', filePath, ':', fileName)
+        throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
+    }
 
     // figure out active cell bounding box
     const upperLeft = sheetData['!ref'].split(':')[0]
@@ -23,7 +36,7 @@ function readScheduleIndex(fileName, tab) {
     const lowerRight = sheetData['!ref'].split(':')[1]
     const lowerRightCol = sheetData['!ref'].split(':')[1].match(/[a-zA-Z]+/g)[0]
     const lowerRightRow = sheetData['!ref'].split(':')[1].match(/[0-9]+/g)[0]
-    // console.log('MasterFile Info: [%s:%s] cell range %s to %s\n', fileName, tab, upperLeft, lowerRight )
+    // console.info('MasterFile Info: [%s:%s] cell range %s to %s\n', fileName, tab, upperLeft, lowerRight )
 
     // compute # rows and cols
     const stringIndex = {
@@ -33,12 +46,10 @@ function readScheduleIndex(fileName, tab) {
     }
     const numCols = stringIndex[lowerRightCol] - stringIndex[upperLeftCol] + 1
     const numRows = lowerRightRow - upperLeftRow + 1
-    console.log('# cols', numCols)
-    console.log('# rows', numRows)
+    // console.info('# cols', numCols)
+    // console.info('# rows', numRows)
 
     const keyCols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S']
-    // const riskScoreCols = ['T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    // const featuresCols = ['AA', 'AB', 'AC', 'AD', 'AE']
     let headers = {}
     let data = []
 
@@ -73,11 +84,9 @@ function readScheduleIndex(fileName, tab) {
         }
     }
 
-
-
-  // console.error('data:', data)
-  return data
+    // console.error('data:', data)
+    return data
 
 }
 
-module.exports.readScheduleIndex = readScheduleIndex
+module.exports.readHierarchySource = readHierarchySource

@@ -4,6 +4,7 @@ coverage/
 docs/
 platform/
 public/
+jsonStorage/
 .tmp
 .idea
 .log
