@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const xlsx = require('xlsx')
 const util = require('util')
 
@@ -45,7 +46,7 @@ function xformHierarchySource(args) {
                 if (currentId >= 0) {
                     project.idList[currentId].tdList.push(line)
                 } else {
-                    throw 'ERROR: Hierarchy Index TD: ' + line['Deliverable Number'] + ' created before Parent ID:' + id
+                    throw chalk.red('ERROR') + ': Hierarchy Index TD: ' + line['Deliverable Number'] + ' created before Parent ID:' + id
                 }
                 break
         }

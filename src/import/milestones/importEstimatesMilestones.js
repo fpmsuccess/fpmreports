@@ -1,3 +1,5 @@
+const chalk = require('chalk')
+
 const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
 const { displayItem } = require('../../utilities/displayItem')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
@@ -7,7 +9,12 @@ function importEstimatesMilestones(args) {
     // console.info('\INFO: importEstimatesMilestones()')
 
     // open hierarchy source to get index to estimates (by deliverable)
-    hierarchySourceFlat = retrieveDatapoint(args, args.hierarchyName + 'Flat')
+    let hierarchySourceFlat = retrieveDatapoint(args, args.hierarchyName + 'Flat')
+    if (hierarchySourceFlat === undefined) {
+        args.stopAfterImport = true
+        console.log(chalk.red('ERROR') + ': Not all datapoints have been successfully imported')
+        return
+    }
 
     // process TD milestone estimates
     hierarchySourceFlat.tdList.forEach((td) => {
@@ -15,10 +22,10 @@ function importEstimatesMilestones(args) {
         let data = []
 
         try {
-            data = readMilestone(args, 'Estimate', td['Estimate Root Path'], td['Estimate File Name'], td['Estimate Tab'])
+            data = readMilestone(args, 'Estimate', td['Estimate Root Path'].trim(), td['Estimate File Name'].trim(), td['Estimate Tab'].trim())
         } catch (err) {
+            args.stopAfterImport = true
             console.error(err)
-            return
         }
         
         // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'
@@ -40,9 +47,10 @@ function importEstimatesMilestones(args) {
         let data = []
 
         try {
-            data = readMilestone(args, 'Estimate', id['Estimate Root Path'], id['Estimate File Name'], id['Estimate Tab'])
+            data = readMilestone(args, 'Estimate', id['Estimate Root Path'].trim(), id['Estimate File Name'].trim(), id['Estimate Tab'].trim())
         } catch (err) {
-            throw err
+            args.stopAfterImport = true
+            console.error(err)
         }
 
         // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'
@@ -67,9 +75,10 @@ function importEstimatesMilestones(args) {
         //  - NOTE!: readMilestones() needs to be checked 
         //      to ensure applicable for pd estimates
         try {
-            data = readMilestone(args, 'Estimate', pd['Estimate Root Path'], pd['Estimate File Name'], pd['Estimate Tab'])
+            data = readMilestone(args, 'Estimate', pd['Estimate Root Path'].trim(), pd['Estimate File Name'].trim(), pd['Estimate Tab'].trim())
         } catch (err) {
-            throw err
+            args.stopAfterImport = true
+            console.error(err)
         }
 
         // if a default milestone set, correct 'Deliverable Name', 'Deliverable Number'

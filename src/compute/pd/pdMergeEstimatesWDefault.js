@@ -1,4 +1,4 @@
-const merge = require('deepmerge')
+const deepmerge = require('deepmerge')
 
 const { displayItem } = require('../../utilities/displayItem')
 const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
@@ -19,9 +19,9 @@ function pdMergeEstimatesWDefault(args) {
     estimateMilestones = retrieveDatapoint(args, pd['Deliverable Number'] + 'Estimate')
     defaultMilestones = retrieveDatapoint(args, 'PDDefaultMilestones')
 
-    // merge the two allowing missing estinate milestones to take default values
-    //  - merge(x,y) => if element of same key is present for both, the value from y will appear in the results.
-    milestones = merge(defaultMilestones, estimateMilestones)
+    // deepmerge the two allowing missing estinate milestones to take default values
+    //  - deepmerge(x,y) => if element of same key is present for both, the value from y will appear in the results.
+    milestones = deepmerge(defaultMilestones, estimateMilestones)
     
     let datapointName = pd['Deliverable Number'] + 'Milestones'
     storeDatapoint(args, milestones, datapointName)

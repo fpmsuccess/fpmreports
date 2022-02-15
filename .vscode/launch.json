@@ -11,15 +11,10 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node",
-            "args": [
-                "--fileRoot ../StdCosting/",
-                "--defaultTDScheduleTab=ZeroTDSchedule",
-                "--showImports=PD"
-            ]
+            "type": "pwa-node"
         },
         {
-            "name": "--display --showTotals TD101",
+            "name": "--display --show TD101",
             "program": "${workspaceFolder}/app.js",
             "request": "launch",
             "skipFiles": [
@@ -31,11 +26,11 @@
                 "--defaultTDScheduleTab=ZeroTDSchedule",
                 "--options",
                 "--display",
-                "--showTotals=TD101"
+                "--show=TD101"
             ]
         },
         {
-            "name": "--display --showTotals ID1",
+            "name": "--display --show ID1",
             "program": "${workspaceFolder}/app.js",
             "request": "launch",
             "skipFiles": [
@@ -49,7 +44,7 @@
                 "--import",
                 "--compute",
                 "--display",
-                "--showTotals=ID1",
+                "--show=ID1",
                 "--hierarchyTab=Hierarchy Zero"
             ]
         },

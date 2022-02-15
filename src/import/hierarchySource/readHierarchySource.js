@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const xlsx = require('xlsx')
 
 
@@ -17,15 +18,20 @@ function readHierarchySource(args, filePath, fileName, tab) {
             { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
         )
     } catch (err) {
-        throw 'Error: File: ' + filePath + fileName + ' doesn\'t exist'
+        args.stopAfterImport = true
+        throw chalk.red('Error') + ': Unable to open file as spreadsheet input: \'' + filePath + fileName + '\''
     }
     
     const sheets = spreadsheet.SheetNames
-    // console.info('sheet names:', sheets, tab)
+    if (sheets.indexOf(tab) === -1) {
+        args.stopAfterImport = true
+        throw chalk.red('Error') + ': \'' + tab + '\' is not one of existing tabs: ' + JSON.stringify(sheets) + ' of file: ' + '\'' + fileName + '\''
+    }
     const sheetData = spreadsheet.Sheets[tab]
     if (typeof sheetData === 'undefined') {
-        console.error('existing tabs:', sheets, ' in: ', filePath, ':', fileName)
-        throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
+        // args.stopAfterImport = true // don't stop after WARNING
+        let msg = chalk.yellow('WARNING') + ': spreadsheet tab \'' + tab + '\' in file: \'' + filePath + fileName + '\' does not contain data'
+        throw msg
     }
 
     // figure out active cell bounding box

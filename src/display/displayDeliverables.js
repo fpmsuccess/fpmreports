@@ -8,12 +8,12 @@ const { displayPDTotal } = require("./displayPD/displayPDTotal")
 
 function displayDeliverables(args) {
 
-    let filter = '' + args.showTotals
+    let filter = '' + args.show
 
     // showTDxxxMilestones
 
     // show only single TDxxx Milestones
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter.match(/TD[1-9][0-9][0-9]Milestones/)) {
+    if (typeof args.show !== 'boolean' && args.show && filter.match(/TD[1-9][0-9][0-9]Milestones/)) {
         // best directly retrieve TDxxxMilestones datapoint
         const milestones = retrieveDatapoint(args, filter)
         displayTDSpecificTotal(args, milestones)
@@ -21,7 +21,7 @@ function displayDeliverables(args) {
     }
 
     // show only single IDx Milestones
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter.match(/ID[1-9]Milestones/)) {
+    if (typeof args.show !== 'boolean' && args.show && filter.match(/ID[1-9]Milestones/)) {
         // best directly retrieve TDxxxMilestones datapoint
         const milestones = retrieveDatapoint(args, filter)
         displayIDSpecificTotal(args, milestones)
@@ -29,7 +29,7 @@ function displayDeliverables(args) {
     }
 
     // show only single PD Milestones
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter === 'PDMilestones') {
+    if (typeof args.show !== 'boolean' && args.show && filter === 'PDMilestones') {
         // best directly retrieve TDxxxMilestones datapoint
         const milestones = retrieveDatapoint(args, filter)
         displayPDSpecificTotal(args, milestones)
@@ -37,7 +37,7 @@ function displayDeliverables(args) {
     }
 
     // show only single TDxxx Specific Total
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter.match(/TD[1-9][0-9][0-9]/)) {
+    if (typeof args.show !== 'boolean' && args.show && filter.match(/TD[1-9][0-9][0-9]/)) {
         // best to use projectFlat as source for this one - access to all TDxxx from one list
         const project = retrieveDatapoint(args, args.hierarchyName + 'Flat')
         project.tdList.forEach(td => { 
@@ -50,7 +50,7 @@ function displayDeliverables(args) {
     }
 
     // show single IDx Total incl. IDx Specific Total and each TDxxx Specific Total [parent ==- IDx]
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter.match(/ID[1-9]/)) {
+    if (typeof args.show !== 'boolean' && args.show && filter.match(/ID[1-9]/)) {
         // best to use project as source for this one - access to all IDx with sub TDxxx from one list
         const project = retrieveDatapoint(args, args.hierarchyName)
         project.idList.forEach(id => {
@@ -66,17 +66,31 @@ function displayDeliverables(args) {
                     })
                     console.log()
                 console.groupEnd()
-                console.group('Total:')
-                    const total = retrieveDatapoint(args, id['Deliverable Number'] + 'Total')
-                    displayIDTotal(args, total)
-                console.groupEnd()
+                const total = retrieveDatapoint(args, id['Deliverable Number'] + 'Total')
+                displayIDTotal(args, total)
             }
         })
     }
 
+    // show PD Total incl. PDx Specific Total
+    if ((typeof args.show !== 'boolean' && args.show && filter === 'PD')
+        || typeof args.show === 'boolean'
+    ) {
+        // best to use project as source for this one - access to all IDx with sub TDxxx from one list
+        const project = retrieveDatapoint(args, args.hierarchyName)
+        pd = project.info
+        displayPDSpecificTotal(args, pd)
+        const milestones = retrieveDatapoint(args, pd['Deliverable Number'] + 'Milestones')
+        console.group()
+        displayDeliverableMilestones(args, milestones)
+        console.groupEnd()
+        const pdTotal = retrieveDatapoint(args, pd['Deliverable Number'] + 'Total')
+        displayPDTotal(args, pdTotal)
+    }
+
     // show PD Total incl. PDx Specific Total and IDx Total
-    if ((typeof args.showTotals !== 'boolean' && args.showTotals && filter === 'PD')
-        || typeof args.showTotals === 'boolean'
+    if ((typeof args.show !== 'boolean' && args.show && filter === 'PDDetail')
+        || typeof args.show === 'boolean'
     ) {
         // best to use project as source for this one - access to all IDx with sub TDxxx from one list
         const project = retrieveDatapoint(args, args.hierarchyName)
@@ -94,14 +108,14 @@ function displayDeliverables(args) {
             })
             console.log()
         console.groupEnd()
-        console.group('Total:')
+        // console.group('Total:')
             const pdTotal = retrieveDatapoint(args, pd['Deliverable Number'] + 'Total')
             displayPDTotal(args, pdTotal)
-        console.groupEnd()
+        // console.groupEnd()
     }
 
     // show PD Total incl. PDx Specific Total and IDx Total
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter === 'All') {
+    if (typeof args.show !== 'boolean' && args.show && filter === 'All') {
         // best to use project as source for this one - access to all IDx with sub TDxxx from one list
         const project = retrieveDatapoint(args, args.hierarchyName)
         pd = project.info
@@ -119,7 +133,7 @@ function displayDeliverables(args) {
     }
 
     // show PD Total incl. PDx Specific Total and IDx Total
-    if (typeof args.showTotals !== 'boolean' && args.showTotals && filter === 'AllMilestones') {
+    if (typeof args.show !== 'boolean' && args.show && filter === 'AllMilestones') {
         // best to use project as source for this one - access to all IDx with sub TDxxx from one list
         const project = retrieveDatapoint(args, args.hierarchyName)
         pd = project.info

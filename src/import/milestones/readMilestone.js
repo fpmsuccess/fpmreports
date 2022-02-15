@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const xlsx = require('xlsx')
 
 // state machine constants (relative to milestone input file)
@@ -16,25 +17,24 @@ function readMilestone(args, type, filePath, fileName, tab) {
 
     let spreadsheet
     try {
-        // console.error('filePath\\fileName: in: ' + '\'' + filePath + fileName + '\'')
         spreadsheet = xlsx.readFile(
             filePath + fileName,
             { 'cellHTML': false, 'cellHTML': false, 'cellNF': false, 'cellText': false }
         )
     } catch (err) {
-        console.error('filePath\\fileName: \'' + filePath + fileName + '\'')
-        throw 'Error: File: ' + filePath + fileName + ' doesn\'t exist'
+        args.stopAfterImport = true
+        throw chalk.red('ERROR') + ': Unable to open file as spreadsheet input: \'' + filePath + fileName + '\''
     }
 
     const sheets = spreadsheet.SheetNames
     if (sheets.indexOf(tab) === -1) {
-        console.error('existing tabs:', sheets, ' in: ' + '\'' + filePath + fileName + '\'')
-        throw 'ERROR: tab: ' + tab + '\'' + ' not found in ' + '\'' + filePath + fileName + '\'' 
+        args.stopAfterImport = true
+        throw chalk.red('ERROR') + ': \'' + tab + '\' is not one of existing tabs: ' + JSON.stringify(sheets) + ' of file: ' + '\'' + fileName + '\'' 
     }
     const sheetData = spreadsheet.Sheets[tab]
-    if (typeof sheetData === 'undefined') {
-        console.error('existing tabs:', sheets, ' in: ', filePath, fileName)
-        throw 'Error: Tab: ' + tab + ' doesn\'t exist in file: ' + filePath + fileName
+    if (typeof sheetData === 'undefined' || typeof sheetData['!ref'] === 'undefined') {
+        // args.stopAfterImport = true
+        throw chalk.yellow('WARNING') + ': Tab: \'' + tab + '\' in file: \'' + filePath + fileName + '\' does not contain data'
     }
 
     // figure out active cell bounding box

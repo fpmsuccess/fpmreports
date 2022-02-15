@@ -1,6 +1,5 @@
 const fs = require('fs')
-// import chalk from 'chalk'
-// const chalk = require('chalk')
+const chalk = require('chalk')
 
 function retrieveDatapoint(args, datapointName) {
     if (args.showInfoX) {
@@ -9,8 +8,14 @@ function retrieveDatapoint(args, datapointName) {
 
     const dbLocation = args.jsonRoot + datapointName + '.json'
     // console.info('dbLocation:', dbLocation)
-    const jsonItem = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
-    datapoint = JSON.parse(jsonItem)
+    try {
+        const jsonItem = fs.readFileSync(dbLocation, { encoding: 'utf8', flag: 'r' })
+        datapoint = JSON.parse(jsonItem)
+    } catch (err) {
+        args.stopAfterImport = true
+        console.log(chalk.red('ERROR') + ': datapoint \'' + dbLocation + '\'  has not yet been created')
+        return undefined
+    }
 
     return datapoint
 }

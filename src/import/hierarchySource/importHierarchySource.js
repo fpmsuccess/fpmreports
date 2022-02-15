@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 
 const { readHierarchySource } = require('./readHierarchySource.js')
 const { storeDatapoint } = require('../../utilities/storeDatapoint.js')
@@ -15,25 +16,29 @@ function importHierarchySource(args) {
         rawHierarchySource = readHierarchySource(args, args.fileRoot, args.hierarchySource, args.hierarchyTab)
         storeDatapoint(args, rawHierarchySource, args.hierarchyName + 'Raw')
     } catch (err) {
-        console.info('args.fileRoot:', args.fileRoot, 'args.hierarchySource:', args.hierarchySource, 'args.hierarchyTab:', args.hierarchyTab)
-        throw err
+        args.stopAfterImport = true
+        console.info(chalk.red('ERROR') + ': Failed to read hierarchy Source from file: \'' + args.fileRoot + args.hierarchySource + '\'')
+        return
     }
 
     // transform the excel info into Project object and save it as a datapoint
     try {
-        xformHierarchySource(args, args.rawHierarchySource)
+        xformHierarchySource(args, rawHierarchySource)
     } catch (err) {
-        throw err
+        args.stopAfterImport = true
+        console.info(chalk.red('ERROR') + ': Failed to transform raw hierarchy source into datapoint: \'' + args.fileRoot + hierarchySource + '\'')
+        return
     }
 
     // transform the excel info into ProjectFlat object and save it as a datapoint
     try {
         xformHierarchySourceFlat(args, args.rawHierarchySource)
     } catch (err) {
-        throw err
+        args.stopAfterImport = true
+        console.info(chalk.red('ERROR') + ': Failed to transform raw hierarchy source into flat datapoint: \'' + args.fileRoot + hierarchySource + '\'')
+        return
     }
 
-    // return hierarchySource
 }
 
 module.exports.importHierarchySource = importHierarchySource
