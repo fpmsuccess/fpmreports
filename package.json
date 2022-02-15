@@ -1,6 +1,6 @@
 {
   "name": "schedule",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Compute the project schedule duration from spreadsheet input",
   "main": "app.js",
   "scripts": {
@@ -9,6 +9,7 @@
   "author": "Mihi Health <monte@mihi.health>",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^4.1.2",
     "deepmerge": "^4.2.2",
     "lodash.merge": "^4.6.2",
     "minimist": "^1.2.5",

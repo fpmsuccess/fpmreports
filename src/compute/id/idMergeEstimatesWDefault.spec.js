@@ -1,5 +1,5 @@
 const util = require('util')
-const merge = require('deepmerge')
+const deepmerge = require('deepmerge')
 
 const { displayItem } = require('../../utilities/displayItem')
 const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
@@ -27,9 +27,9 @@ function idMergeEstimatesWDefault.spec() {
     defaultMilestones = retrieveDatapoint(args, 'TDOneMilestones')
     estimateMilestones = retrieveDatapoint(args, 'TDTestMilestones')
     
-    // merge the two allowing missing estinate mergedMilestones to take default values
-    //  - merge(x,y) => if element of same key is present for both, the value from y will appear in the results.
-    mergedMilestones = merge(defaultMilestones, estimateMilestones)
+    // deepmerge the two allowing missing estinate mergedMilestones to take default values
+    //  - deepmerge(x,y) => if element of same key is present for both, the value from y will appear in the results.
+    mergedMilestones = deepmerge(defaultMilestones, estimateMilestones)
 
     // display if cli args indicate to do so
     displayItem(args, 'showDefaultMilestones', defaultMilestones)

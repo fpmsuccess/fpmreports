@@ -4,6 +4,7 @@ const { version } = require('./package.json')
 // import from data sources
 const { cliArgs } = require('./src/cliArgs/cliArgs.js')
 const { importHierarchy } = require('./src/import/importHierarchy')
+const { normalizeDeliverables } = require('./src/compute/normalizeDeliverables')
 const { computeSpecificRollup } = require('./src/compute/computeSpecificRollup')
 const { computeTotals } = require('./src/compute/computeTotals')
 const { displayDeliverables } = require('./src/display/displayDeliverables')
@@ -23,7 +24,7 @@ function appTopLevel() {
 
     // only show cli args if requested    
     if (args.options) {
-        console.info('cli args', typeof args, args)
+        console.info('cli args', args)
         console.info()
     }
     
@@ -32,34 +33,60 @@ function appTopLevel() {
         console.info('\nimport Project Hierarchy:', args.hierarchySource)
         console.group()
             importHierarchy(args)
+            // stop processing if error conditions have been encountered!
+            if (typeof args.stopAfterImport && args.stopAfterImport === true) {
+                process.exit(2)
+            }
         console.groupEnd()
-    }
 
-    if (args.compute || args.all) {
+
+        // generate normalized milestones for TDxxx, IDx, PD
+        //  => TDxxxMilestones
+        //  => IDxMilestones
+        //  => PDMilestones
+        console.info('\ncompute normalized Deliverable Estimates \n\n  ... Use defaults values for any undeclared Estimate milestones')
+        console.group()
+            normalizeDeliverables(args)
+            // stop processing if error conditions have been encountered!
+            if (typeof args.stopAfterImport && args.stopAfterImport === true) {
+                process.exit(2)
+            }
+        console.groupEnd()
+
         // compute deliverable specific (@ [difficulty, skill]) for TDxxx, IDx, PD
         console.info('\ncompute Deliverable Specific milestones')
         console.group()
             computeSpecificRollup(args)
+            // stop processing if error conditions have been encountered!
+            if (typeof args.stopAfterImport && args.stopAfterImport === true) {
+                process.exit(2)
+            }
         console.groupEnd()
+
 
         // compute deliverable total (TD, ID, PD)
         console.info('\ncompute Deliverable Totals')
         console.group()
             computeTotals(args)
+            // stop processing if error conditions have been encountered!
+            if (typeof args.stopAfterImport && args.stopAfterImport === true) {
+                process.exit(2)
+        }
         console.groupEnd()
+
+        console.log()
     }
-    console.log()
 
     // // man-hours to Calendar Days
     // // computeManHourstoCalendarDays(args)
 
-    if (args.display || args.all) {
-        // display deliverable totals
-        console.info('display Report\n')
-        console.group()
-            displayDeliverables(args)
-        console.groupEnd()
+    console.info('\ndisplay Report')
+    console.log()
+    console.group()
+    if (args.display) {
+        displayDeliverables(args)
     }
+    console.groupEnd()
 
     console.groupEnd()
 }

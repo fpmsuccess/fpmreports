@@ -21,8 +21,8 @@ function computeTotals(args) {
     hierarchySource = retrieveDatapoint(args, args.hierarchyName)
     
     // compute IDx specific milestones
-    //  - IDxTotal = IDxSpecificTotal + Σ[TDxxxTotal]
-    console.info('\n... IDx Total = IDxSpecificTotal + Σ[TDxxxTotal')
+    //  - IDxTotal = IDxSpecificTotal + Σ[TDxxxSpecificTotal]
+    console.info('\n... IDx Total = IDxSpecificTotal + Σ[TDxxxSpecificTotal]')
     console.group()
         // REQUIRES ID to have form from project hierarchy not projectFlat hierarchy!
         //   - needs the TDs associated by ID, not all TDs in single list
@@ -35,7 +35,7 @@ function computeTotals(args) {
     // compute deliverable total (ID, PD)
     //  - PDTotal = PDSpecificTotal + Σ[IDxTotal]
     // console.info('\n... PD Specific (@ [difficulty, skill]) milestones')
-    console.info('\n... PDx Total = PDxSpecificTotal + Σ[IDxxxTotal')
+    console.info('\n... PDx Total = PDxSpecificTotal + Σ[IDxxxTotal]')
     console.group()
         // REQUIRES ID to have form from project hierarchy not projectFlat hierarchy!
         //   - needs the TDs associated by ID, not all TDs in single list

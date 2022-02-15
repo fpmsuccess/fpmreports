@@ -1,0 +1,13 @@
+{
+    "fileRoot": "..\\..\\StdCosting\\",
+    "hierarchySource": "elbert.xlsx",
+    "hierarchyName": "elbert",
+    "hierarchyTab": "Hierarchy Index",
+    "jsonRoot": ".\\jsonStorage\\",
+    "win": false,
+    "options": false,
+    "import": false,
+    "display": true,
+    "show": "PD",
+    "manHrsPerWk": 36
+}

@@ -1,46 +1,49 @@
 
 function displayPDTotal(args, pd) {
-    // console.log(pd['Full Deliverable Name'])
-    console.group() // for PD
-        // // output the deliverable total
-        output = scheduleTotalToString(pd, 'total')
-        console.log(output)
-        console.log()
-    console.groupEnd()
-
-}
-
-function padManHrs(manHrs) {
-    pad = ''.concat(manHrs)
-    MAX_FILL = 4
-    let fill = ''
-    for (i = 1; i <= MAX_FILL - pad.length; i++) {
-        fill += ' '
-    }
-    return fill.concat(pad)
-}
-
-function scheduleTotalToString(pd, tdProperty) {
     let output = ''
-    let minManHrsOut = ''
-    let expectedManHrsOut = ''
-    let maxManHrsOut = ''
 
-    // process 'ID Schedule Total'
-    minManHrsOut = typeof pd[tdProperty].min !== 'undefined'
-        ? 'minManHrs: ' + padManHrs(pd[tdProperty].min) : ''
-    expectedManHrsOut = typeof pd[tdProperty].expected !== 'undefined'
-        ? 'expectedManHrs: ' + padManHrs(pd[tdProperty].expected) : ''
-    maxManHrsOut = typeof pd[tdProperty].max !== 'undefined'
-        ? 'maxManHrs: ' + padManHrs(pd[tdProperty].max) : ''
+    // start with estimated man hours
+    output = 'PD Totals'
+    output += '\n   Estimate (manHrs):'.padEnd(25, ' ')
+        + 'Minimum:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.total.min).padStart(5, ' ') + ', '
+        + 'Expected:'.padStart(10, ' ') + ('' + pd.total.expected).padStart(5, ' ') + ', '
+        + 'Maximum:'.padStart(10, ' ') + ('' + pd.total.max).padStart(5, ' ')
 
-    output = 'PD Total'.padEnd(25, ' ')
-        // + ':' + fill + '   '
-        + minManHrsOut + ', '
-        + expectedManHrsOut + ', '
-        + maxManHrsOut
+    // next 'Difficulty'
+    output += '\n   Difficulty:'.padEnd(25, ' ')
+        + 'Easy:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.difficulty.easy).padStart(5, ' ') + ', '
+        + 'Medium:'.padStart(10, ' ') + ('' + pd.difficulty.medium).padStart(5, ' ') + ', '
+        + 'Hard:'.padStart(10, ' ') + ('' + pd.difficulty.hard).padStart(5, ' ') + ', '
+        + 'Total:'.padStart(10, ' ') + ('' + (pd.difficulty.easy + pd.difficulty.medium + pd.difficulty.hard)).padStart(5, ' ')
 
-    return output
+    // process 'Skill'
+    output += '\n   Skill:'.padEnd(25, ' ')
+        + 'SD I:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.skill.sdi).padStart(5, ' ') + ', '
+        + 'SD II:'.padStart(10, ' ') + ('' + pd.skill.sdii).padStart(5, ' ') + ', '
+        + 'SD III:'.padStart(10, ' ') + ('' + pd.skill.sdiii).padStart(5, ' ') + ', '
+        + 'Total:'.padStart(10, ' ') + ('' + (pd.skill.sdi + pd.skill.sdii + pd.skill.sdiii)).padStart(5, ' ')
+
+    output += '\n'
+
+    // process 'td Counts'
+    output += '\n   TD Count:'.padEnd(25, ' ')
+        + 'total:'.padStart(10).padEnd(10, ' ') + ('' + pd.tdCount).padStart(5, ' ') + ', '
+        + 'estimates:'.padStart(10, ' ') + ('' + pd.tdDefaultEstimates).padStart(5, ' ')
+        + (' (' + (pd.tdDefaultEstimates * 100) / pd.tdCount + '%)').padStart(7, ' ')
+
+    // process 'id Counts'
+    output += '\n   ID Count:'.padEnd(25, ' ')
+        + 'total:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.idCount).padStart(5, ' ') + ', '
+        + 'defaults:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.idDefaultEstimates).padStart(5, ' ')
+        + (' (' + (pd.idDefaultEstimates * 100 / pd.idCount) + '%)').padStart(7, ' ')
+    
+    // process 'pd Counts'
+    output += '\n   PD Count:'.padEnd(25, ' ')
+        + 'total:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.pdCount).padStart(5, ' ') + ', '
+        + 'defaults:'.padStart(10, ' ') + ('' + pd.pdDefaultEstimates).padStart(5, ' ')
+        + (' (' + (pd.pdDefaultEstimates * 100 / pd.pdCount) + '%)').padStart(7, ' ')
+
+    console.log(output)
 }
 
 module.exports.displayPDTotal = displayPDTotal

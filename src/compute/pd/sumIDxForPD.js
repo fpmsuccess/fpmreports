@@ -34,9 +34,9 @@ function sumIDxForPD(args, pd) {
         pdTotal.total.max += idSpecificTotal.total.max
 
         // // inc difficulty level as appripriate
-        pdTotal.difficulty.easy += pdTotal.difficulty.easy++
-        pdTotal.difficulty.medium += pdTotal.difficulty.medium++
-        pdTotal.difficulty.hard += pdTotal.difficulty.hard++
+        pdTotal.difficulty.easy += idSpecificTotal.difficulty.easy++
+        pdTotal.difficulty.medium += idSpecificTotal.difficulty.medium++
+        pdTotal.difficulty.hard += idSpecificTotal.difficulty.hard++
 
         // // inc skill level as appropriate
         pdTotal.skill.sdi += idSpecificTotal.skill.sdi
