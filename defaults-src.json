@@ -1,13 +1,13 @@
 {
-    "fileRoot": "..\\..\\StdCosting\\",
+    "fileRoot": "../StdCosting/",
     "hierarchySource": "elbert.xlsx",
     "hierarchyName": "elbert",
     "hierarchyTab": "Hierarchy Index",
-    "jsonRoot": ".\\jsonStorage\\",
+    "jsonRoot": "./jsonStorage/",
     "win": false,
     "options": false,
-    "import": false,
+    "import": true,
     "display": true,
-    "show": "PD",
+    "show": "Report",
     "manHrsPerWk": 36
 }
