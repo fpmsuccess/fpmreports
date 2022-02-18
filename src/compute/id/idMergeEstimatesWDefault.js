@@ -1,3 +1,4 @@
+const isEqual = require('lodash.isequal')
 const deepmerge = require('deepmerge')
 
 const { retrieveDatapoint } = require('../../utilities/retrieveDatapoint')
@@ -23,16 +24,17 @@ function idMergeEstimatesWDefault(args) {
 
         // deepmerge the two allowing missing estinate milestones to take default values
         //  - deepmerge(x,y) => if element of same key is present for both, the value from y will appear in the results.
+        // BUGBUG: if y key has value of 0, x will appear in the result! -- not sure if this is expected
         milestones = deepmerge(defaultMilestones, estimateMilestones)
 
-        // determine if default values were used in merge
-        if (milestones !== estimateMilestones
-            && milestones['Person Creating Estimate'] !== defaultMilestones['Person Creating Estimate']
-        ) {
-            milestones['Person Creating Estimate'] = milestones['Person Creating Estimate']
-                + ' (incl. some '
-                + defaultMilestones['Person Creating Estimate']
-                + ')'
+        // // determine if default values were used in merge
+        if (isEqual(milestones, estimateMilestones) === false) {
+            // if (milestones['Person Creating Estimate'] !== estimateMilestones['Person Creating Estimate']) {
+                milestones['Person Creating Estimate'] = milestones['Person Creating Estimate']
+                    + ' (incl. some '
+                    + defaultMilestones['Person Creating Estimate']
+                    + ')'
+            // }
         }
         
         let datapointName = id['Deliverable Number'] + 'Milestones'
