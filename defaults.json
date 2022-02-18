@@ -6,7 +6,7 @@
     "jsonRoot": "./jsonStorage/",
     "win": false,
     "options": false,
-    "import": true,
+    "import": false,
     "display": true,
     "show": "Report",
     "manHrsPerWk": 36
