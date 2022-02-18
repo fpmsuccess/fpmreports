@@ -1,0 +1,87 @@
+
+fpmRollup:	version: 0.8.0
+
+  
+  display Report
+  
+    PD - ATP Server
+      Estimate Created by:     PD Default Milestones
+      PD Info                  difficulty level: Easy, recommended skill level: SD II
+                               milestone count: 8
+      PD Specific Total        minManHrs:   40, expectedManHrs:   40, maxManHrs:   40
+        Milestones
+          Coding:                        minManHrs:    4, expectedManHrs:    4, maxManHrs:    4
+          Code Review:                   minManHrs:    4, expectedManHrs:    4, maxManHrs:    4
+          Integration:                   minManHrs:    4, expectedManHrs:    4, maxManHrs:    4
+          End-to-End Test:               minManHrs:    4, expectedManHrs:    4, maxManHrs:    4
+          Document:                      minManHrs:    4, expectedManHrs:    4, maxManHrs:    4
+          Final Review Prep:             minManHrs:    4, expectedManHrs:    4, maxManHrs:    4
+          Final Review:                  minManHrs:    8, expectedManHrs:    8, maxManHrs:    8
+          Merge to Develop:              minManHrs:    8, expectedManHrs:    8, maxManHrs:    8
+        
+    PD Totals
+       Estimate (manHrs):     Minimum: 3653,  Expected: 4172,   Maximum: 4801
+       Difficulty:               Easy:   31,    Medium:    6,      Hard:    6,     Total:   43
+       Skill:                    SD I:   13,     SD II:   28,    SD III:    2,     Total:   43
+    
+       TD Count:                total:   35,  defaults:   14  (40%)
+       ID Count:                total:    7,  defaults:    7 (100%)
+       PD Count:                total:    1,  defaults:    1 (100%)
+
+fpmRollup:	version: 0.8.0
+
+  
+  display Report
+  
+    
+    ID1 - Packet
+      Estimate Created by:     ID Test Milestones
+      ID Info                  difficulty level: Medium, recommended skill level: SD II
+                               milestone count: 9
+      ID Specific Total        minManHrs:   56, expectedManHrs:   56, maxManHrs:   56
+        Milestones
+          Coding:                        minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Code Review:                   minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Integration:                   minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Integration Test:              minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Document:                      minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Final Review Prep:             minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Final Review:                  minManHrs:   16, expectedManHrs:   16, maxManHrs:   16
+          Merge to Develop:              minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+          Final  Review:                 minManHrs:    5, expectedManHrs:    5, maxManHrs:    5
+        
+    Associated TDs:
+      TD101 - TCP
+        Estimate Created by:     TD Zero Milestones
+        TD Info                  difficulty level: Easy, recommended skill level: SD II
+                                 milestone count: 9
+        TD Specific Total        minManHrs:    0, expectedManHrs:    0, maxManHrs:    0
+      TD102 - IP
+        Estimate Created by:     Carolyn Alacar
+        TD Info                  difficulty level: Easy, recommended skill level: SD I
+                                 milestone count: 9
+        TD Specific Total        minManHrs:  111, expectedManHrs:  126, maxManHrs:  146
+      TD103 - UDP
+        Estimate Created by:     Sundhar
+        TD Info                  difficulty level: Medium, recommended skill level: SD II
+                                 milestone count: 9
+        TD Specific Total        minManHrs:   96, expectedManHrs:  108, maxManHrs:  120
+      TD104 - ATP
+        Estimate Created by:     Carl Ketcham
+        TD Info                  difficulty level: Medium, recommended skill level: SD II
+                                 milestone count: 11
+        TD Specific Total        minManHrs:   68, expectedManHrs:   68, maxManHrs:   68
+      TD105 - Eventloop
+        Estimate Created by:     Carolyn Alacar
+        TD Info                  difficulty level: Hard, recommended skill level: SD III
+                                 milestone count: 9
+        TD Specific Total        minManHrs:  162, expectedManHrs:  188, maxManHrs:  214
+      
+    
+    ID Totals
+       Estimate (manHrs):         min:  493,  expected:  546,       max:  604
+       Difficulty:               Easy:    2,    Medium:    3,      Hard:    1,     Total:    6
+       Skill:                    SD I:    1,     SD II:    4,    SD III:    1,     Total:    6
+    
+       TD Count:                total:    5, estimates:    1  (20%)
+       ID Count:                total:    1, estimates:    1 (100%)

@@ -22,6 +22,16 @@ function pdMergeEstimatesWDefault(args) {
     // deepmerge the two allowing missing estinate milestones to take default values
     //  - deepmerge(x,y) => if element of same key is present for both, the value from y will appear in the results.
     milestones = deepmerge(defaultMilestones, estimateMilestones)
+
+    // determine if default values were used in merge
+    if (milestones !== estimateMilestones
+        && milestones['Person Creating Estimate'] !== defaultMilestones['Person Creating Estimate']
+    ) {
+        milestones['Person Creating Estimate'] = milestones['Person Creating Estimate']
+            + ' (incl. some '
+            + defaultMilestones['Person Creating Estimate']
+            + ')'
+    }
     
     let datapointName = pd['Deliverable Number'] + 'Milestones'
     storeDatapoint(args, milestones, datapointName)

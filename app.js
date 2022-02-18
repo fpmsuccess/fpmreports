@@ -80,8 +80,8 @@ function appTopLevel() {
     // // man-hours to Calendar Days
     // // computeManHourstoCalendarDays(args)
 
-    console.info('\ndisplay Report')
-    console.log()
+    // console.info('\ndisplay Report:')
+    // console.log()
     console.group()
     if (args.display) {
         displayDeliverables(args)
