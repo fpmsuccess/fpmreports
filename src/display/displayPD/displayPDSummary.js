@@ -28,13 +28,13 @@ function displayPDSummary(args, pd) {
     output += '\n  Total #IDs (in PD):'.padEnd(25, ' ')
         + 'total:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.idCount).padStart(5, ' ') + ', '
         + 'defaults:'.padStart(10, ' ').padEnd(10, ' ') + ('' + pd.idDefaultEstimates).padStart(5, ' ')
-        + (' (' + (pd.idDefaultEstimates * 100 / pd.idCount).toLocaleString('en-US', {maximumFractionDigits:1}) + '%)').padStart(7, ' ')
+        + (' (' + (pd.idDefaultEstimates * 100 / pd.idCount).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits:1}) + '%)').padStart(7, ' ')
 
     // display 'td Count'
     output += '\n  Total #TDs (in PD):'.padEnd(25, ' ')
         + 'total:'.padStart(10).padEnd(10, ' ') + ('' + pd.tdCount).padStart(5, ' ') + ', '
         + 'defaults:'.padStart(10, ' ') + ('' + pd.tdDefaultEstimates).padStart(5, ' ')
-        + (' (' + ((pd.tdDefaultEstimates * 100) / pd.tdCount).toLocaleString('en-US', { maximumFractionDigits: 1 }) + '%)').padStart(7, ' ')
+        + (' (' + ((pd.tdDefaultEstimates * 100) / pd.tdCount).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%)').padStart(7, ' ')
 
     // // display 'pd Count'
     // output += '\n  PD Count:'.padEnd(25, ' ')
